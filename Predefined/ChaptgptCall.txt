@@ -1,0 +1,21 @@
+﻿!!!! DEFAULT; https://api.openai.com/v1/completions
+{
+  "model": "text-davinci-003",
+  "prompt": "",
+  "temperature": 0.81,
+  "max_tokens": 256,
+  "top_p": 1,
+  "frequency_penalty": 0.8,
+  "presence_penalty": 0
+}
+
+!!!! DEFAULT_LONG; https://api.openai.com/v1/completions
+{
+  "model": "text-davinci-003",
+  "prompt": "",
+  "temperature": 0.81,
+  "max_tokens": 2048,
+  "top_p": 1,
+  "frequency_penalty": 0.8,
+  "presence_penalty": 0
+}

@@ -1,0 +1,176 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="using:EndlessRealms.Gui.Converter"
+        xmlns:com="using:EndlessRealms.Gui.Component"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="650"
+        x:Class="EndlessRealms.Gui.MainWindow"              
+        Background="Black"
+        Foreground="White"
+        Title="EndlessRealms.Gui">
+  <Window.Resources>    
+    <local:BoolToVisibilityConverter x:Key="nullIsTrue" NullIsTrue="True"></local:BoolToVisibilityConverter>
+    <local:BoolToVisibilityConverter x:Key="nullIsFalse" NullIsTrue="False"></local:BoolToVisibilityConverter>
+  </Window.Resources>
+  <Window.Styles>
+    <Style Selector="TextBlock.WithTextStyle">
+      <Setter Property="Text" Value="{Binding Description}"></Setter>      
+      <Setter Property="TextWrapping" Value="Wrap"></Setter>
+      <Setter Property="Margin" Value="10 0"></Setter>
+      <Setter Property="FontSize" Value="{Binding Style.FontSize}"></Setter>
+      <Setter Property="Padding" Value="{Binding Style.Padding}"></Setter>
+      <Setter Property="HorizontalAlignment" Value="{Binding Style.HorizontalAlignment}"></Setter>
+      <Setter Property="Background" Value="{Binding Style.BackgroundBrush}"></Setter>
+      <Setter Property="Foreground" Value="{Binding Style.ForegroundBrush}"></Setter>
+    </Style>
+    
+    <Style Selector="TextBlock.header">
+      <Setter Property="Background" Value="Black"></Setter>
+      <Setter Property="Foreground" Value="White"></Setter>
+    </Style>
+    
+    <Style Selector="ListBox,ListBox:focus,ListBox:selected">      
+      <Setter Property="Background" Value="Black"></Setter>
+      <Setter Property="Foreground" Value="White"></Setter>
+      <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"></Setter>
+      <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Visible"></Setter>
+    </Style>
+
+    <Style Selector="Border">
+      <Setter Property="BorderBrush" Value="LightBlue"></Setter>
+      <Setter Property="BorderThickness" Value="1"></Setter>
+      <Setter Property="Margin" Value="0 4"></Setter>
+    </Style>
+ 
+  </Window.Styles>
+  <Grid RowDefinitions="*,38">    
+    <TabControl Grid.Row="0">
+      <TabItem>
+        <TabItem.Header>
+          <TextBlock Classes="header">Game</TextBlock>
+        </TabItem.Header>
+
+        <Grid ColumnDefinitions="400,4,*">
+
+          <Grid Grid.Column="0" RowDefinitions="400,*">
+            <Grid Grid.Row="0">
+              <StackPanel Margin="2 10 2 2">
+                <TextBlock FontSize="18" Margin="0 20">Commands</TextBlock>
+
+                <TextBlock Foreground="LightBlue">>[direction]</TextBlock>
+                <TextBlock TextWrapping="Wrap">Move to the direction.</TextBlock>
+                <TextBlock TextWrapping="Wrap" Margin="0 0 0 10">ex:>e to east, >w to west, >s to sourth, >n to north</TextBlock>
+
+                <TextBlock Foreground="LightBlue">@[target]</TextBlock>
+                <TextBlock TextWrapping="Wrap" Margin="0 0 0 10">Talk with this target.</TextBlock>                
+
+                <TextBlock Foreground="LightBlue">![target]:[action]</TextBlock>
+                <TextBlock TextWrapping="Wrap">Do something to target.</TextBlock>
+                <TextBlock TextWrapping="Wrap" Margin="0 0 0 10">ex:'@cat:catch', catch the cat</TextBlock>
+              </StackPanel>
+            </Grid>
+
+            <com:WorldMap></com:WorldMap>
+
+          </Grid>
+
+          <GridSplitter Grid.Column="1" Width="5" Background="#222222" ResizeDirection="Columns" ></GridSplitter>
+
+          <Grid Grid.Column="2" RowDefinitions="*,150,120,30">
+            <Border  Grid.Row="0">
+              <ScrollViewer x:Name="sceneView" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible">
+                <StackPanel>
+                  <StackPanel
+                    Margin="5"
+                    x:Name="sceneContainer"
+                    Width="{Binding $parent.Width}">
+                  </StackPanel>
+                  <TextBlock Margin="20 20 5 5" Foreground="Yellow">
+                    There are the following exits
+                  </TextBlock>
+                  <WrapPanel
+                    Margin="5"
+                    x:Name="directionPanel"
+                    Width="{Binding $parent.Width}">
+                  </WrapPanel>
+                  <TextBlock x:Name="thingAndCharPmt" Margin="20 20 5 5" Foreground="Yellow">
+                    There are the following charactor/things
+                  </TextBlock>
+                  <WrapPanel 
+                    Margin="5"
+                    x:Name="thingsAndCharPanel"
+                    Width="{Binding $parent.Width}">
+                  </WrapPanel>
+                </StackPanel>
+              </ScrollViewer>
+            </Border>
+
+            <Border Grid.Row="1">
+              <TextBlock Margin="5" 
+                       Foreground="LightGreen" Background="Black"
+                         Text="{Binding WorldMessage}"
+                      ></TextBlock>
+            </Border>
+            
+            <Border Grid.Row="2">
+              <ScrollViewer>
+                <StackPanel Width="{Binding $parent.Width}">
+                  <TextBlock Padding="5 5 5 2" Text="{Binding InteractiveMessage}" Foreground="Magenta" TextWrapping="Wrap" FontSize="16" Margin="4"></TextBlock>
+                  <TextBlock Padding="5 2 5 1" Text="{Binding HistoryInteractiveMessage}" VerticalAlignment="Bottom"  Foreground="Gray"></TextBlock>
+                </StackPanel>
+              </ScrollViewer>
+            </Border>
+
+            <TextBox x:Name="inputBox"
+                     IsVisible="{Binding Path=CurrentSystemStatus, Converter={StaticResource nullIsTrue}}"
+                     Grid.Row="3" Classes="input" Margin="0 4 35 4"></TextBox>
+            <Button x:Name="sendInputButton" Grid.Row="3" HorizontalAlignment="Right" Margin="0 0 0 0">=></Button>
+          </Grid>
+        </Grid>
+      </TabItem>
+      <TabItem>
+        <TabItem.Header>
+          <TextBlock Classes="header">Log</TextBlock>
+        </TabItem.Header>
+        <Grid RowDefinitions="30,*">
+          <Button x:Name="clearLogButton">Clear Log</Button>
+          <TextBox Text="{Binding Log}" Grid.Row="1"
+                   Margin="4" Foreground="DarkBlue"                   
+                   TextWrapping="Wrap"                   
+                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                   ScrollViewer.VerticalScrollBarVisibility="Visible"
+               x:Name="logText"></TextBox>
+        </Grid>
+      </TabItem>
+    </TabControl>
+
+    <Grid Grid.Row="1" Background="DarkGreen" Margin="2 5">
+      <Grid IsVisible="{Binding Path=CurrentSystemStatus, Converter={StaticResource nullIsFalse}}" ColumnDefinitions="32,*" Margin="5 1">
+        <Grid.Styles>
+          <Style Selector="Rectangle">
+            <Style.Animations>
+              <Animation Duration="0:0:2" IterationCount="INFINITE">
+                <KeyFrame Cue="0%">
+                  <Setter Property="Opacity" Value="1.0"/>
+                </KeyFrame>
+                <KeyFrame Cue="50%">
+                  <Setter Property="Opacity" Value=".2"/>
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                  <Setter Property="Opacity" Value="1"/>
+                </KeyFrame>
+              </Animation>
+            </Style.Animations>
+          </Style>
+        </Grid.Styles>
+        <Rectangle Grid.Column="0" Fill="LightGreen" Height="24" Width="24" VerticalAlignment="Center" Margin="8 3 3 3"></Rectangle>
+        <TextBlock Grid.Column="1" Opacity="1" VerticalAlignment="Center" Text="{Binding CurrentSystemStatus}" Margin="10 0" Foreground="AliceBlue"></TextBlock>
+      </Grid>
+    </Grid>
+
+    <StackPanel>
+      <TextBlock x:Name="errorMessage" Background="Red" Padding="10" Margin="5 10" IsVisible="False"></TextBlock>
+    </StackPanel>
+  </Grid>
+</Window>

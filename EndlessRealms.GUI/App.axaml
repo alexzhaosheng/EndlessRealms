@@ -1,0 +1,20 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="EndlessRealms.Gui.App">
+    <Application.Styles>
+        <FluentTheme Mode="Light"/>
+
+        <Style Selector="Button, Button:pointerover,Button:pressed,Button:selected">
+          <Setter Property="Background" Value="#333333"></Setter>
+          <Setter Property="Foreground" Value="White"></Setter>
+        </Style>
+        <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Background" Value="#555555"></Setter>
+          <Setter Property="TextBlock.Foreground" Value="#8888FF" />
+        </Style>
+
+      <Style Selector="TextBox">
+        <Setter Property="FontFamily" Value="Microsoft YaHei,Simsun,苹方-简,宋体-简"></Setter>
+      </Style>
+    </Application.Styles>
+</Application>
