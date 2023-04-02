@@ -106,11 +106,17 @@ public partial class MainWindow : Window
     {
         this.thingsAndCharPanel.Children.Clear(); 
         this.directionPanel.Children.Clear();
+        
 
-        if(_uiModel.Scene == null)
+        if (_uiModel.Scene == null)
         {
+            exitMessage.IsVisible = false;
+            thingAndCharPmt.IsVisible = false;
             return;
         }
+
+        exitMessage.IsVisible = _uiModel.Scene!.ConnectedScenes.Count() > 0;
+        thingAndCharPmt.IsVisible = (_uiModel.Scene.Characters is { Count: > 0 } || _uiModel.Scene.Things is { Count: > 0 });
 
         foreach (var dInfo in _uiModel.Scene!.ConnectedScenes)
         {  
@@ -125,11 +131,11 @@ public partial class MainWindow : Window
             dUi.SetDirection += DirectionUi_SetDirection;
         }
 
-        thingAndCharPmt.IsVisible = (_uiModel.Scene.Charactors is { Count: > 0 } || _uiModel.Scene.Things is { Count: > 0 });        
+        
 
-        if(_uiModel.Scene.Charactors is { Count: > 0})
+        if(_uiModel.Scene.Characters is { Count: > 0})
         {            
-            foreach (var c in _uiModel.Scene.Charactors)
+            foreach (var c in _uiModel.Scene.Characters)
             {
                 var u = new CharOrThingUi()
                 {

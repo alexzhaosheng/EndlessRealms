@@ -238,7 +238,7 @@ namespace EndlessRealms.Core.Services
 
         public void Remove(CharactorInfo charInfo)
         {
-            this.Current!.Charactors?.Remove(charInfo);
+            this.Current!.Characters?.Remove(charInfo);
         }
 
         public async Task SaveCurrentWorld()

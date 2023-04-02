@@ -27,7 +27,7 @@ namespace EndlessRealms.Models
         public Dictionary<Direction, string?> ConnectedScenes { get; } = new Dictionary<Direction, string?>();
         public List<Something> Things { get; set; } = new List<Something>();
 
-        public List<CharactorInfo> Charactors { get; set; } = new List<CharactorInfo>();
+        public List<CharactorInfo> Characters { get; set; } = new List<CharactorInfo>();
         public Scene()
         {
             Id = Guid.NewGuid().ToString();            

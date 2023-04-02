@@ -23,8 +23,11 @@ namespace EndlessRealms.Gui.Services
         public void Render(World world, Region region, Scene scene)
         {
             _uiModel.SceneWindowInfo.Clear();
-            _uiModel.WriteToScene(TextStyle.TitleStyle, $"[{world.Name}] {scene.Name}");
-            _uiModel.WriteToScene(TextStyle.ContentStyle, scene.Description);
+            if (world != null && scene != null)
+            {
+                _uiModel.WriteToScene(TextStyle.TitleStyle, $"[{world.Name}] {scene.Name}");
+                _uiModel.WriteToScene(TextStyle.ContentStyle, scene.Description);
+            }
 
             _uiModel.World = world;
             _uiModel.Scene = null;

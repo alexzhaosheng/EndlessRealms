@@ -72,7 +72,7 @@ namespace EndlessRealms.Core
                     }
                     else if (command.Type == InteractionType.Talk)
                     {
-                        var charInfo  = this._worldService.Current!.Charactors.FirstOrDefault(t => t.FullName == command.Target);
+                        var charInfo  = this._worldService.Current!.Characters.FirstOrDefault(t => t.FullName == command.Target);
                         if (charInfo != null)
                         {
                             await _playerIoService.TalkToCharactor(charInfo);
@@ -119,7 +119,7 @@ namespace EndlessRealms.Core
                 if (response.CharactorInfo != null)
                 {
                     _worldService.ReduceThing(target);
-                    _worldService.Current!.Charactors.Add(response.CharactorInfo);
+                    _worldService.Current!.Characters.Add(response.CharactorInfo);
                     await _worldService.SaveCurrentWorld();
 
                     var chatHistory = new ChatHistory(response.CharactorInfo.Id);
@@ -167,7 +167,7 @@ namespace EndlessRealms.Core
             try
             {
                 string charInfoStr;
-                var charInfo = _worldService.Current!.Charactors.FirstOrDefault(t => t.FullName == command.Target);
+                var charInfo = _worldService.Current!.Characters.FirstOrDefault(t => t.FullName == command.Target);
                 Something? thing = null;
                 if (charInfo != null)
                 {

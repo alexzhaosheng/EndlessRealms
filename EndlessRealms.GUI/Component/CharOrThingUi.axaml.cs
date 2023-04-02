@@ -43,7 +43,8 @@ public partial class CharOrThingUi : UserControl
         {
             this.numberText.Text = this.Thing.Number.ToString();
             this.descriptionText.Text = $"{this.Thing.Name}";
-            this.descriptionText.Foreground = Brushes.LightGreen;            
+            this.descriptionText.Foreground = Brushes.LightGreen;
+            ToolTip.SetTip(this, this.Thing.Description);
         }
         else
         {
@@ -52,7 +53,9 @@ public partial class CharOrThingUi : UserControl
             this.descriptionText.Text = this.Charactor!.FullName + (
                 string.IsNullOrWhiteSpace(this.Charactor!.Title) 
                 ? "" 
-                : $"({this.Charactor.Title})"); 
+                : $"({this.Charactor.Title})");
+
+            ToolTip.SetTip(this, this.Charactor.Appearance);
         }
     }
 

@@ -86,7 +86,7 @@
                     x:Name="sceneContainer"
                     Width="{Binding $parent.Width}">
                   </StackPanel>
-                  <TextBlock Margin="20 20 5 5" Foreground="Yellow">
+                  <TextBlock x:Name="exitMessage" Margin="20 20 5 5" Foreground="Yellow">
                     There are the following exits
                   </TextBlock>
                   <WrapPanel

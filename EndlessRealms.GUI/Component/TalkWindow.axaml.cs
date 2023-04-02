@@ -103,7 +103,10 @@ public partial class TalkWindow : Window
                 AddAnswer(item.Answer);
             }
 
-            this.chatContent.Children.Last().BringIntoView();
+            if(chatContent.Children.Count > 0)
+            {
+                this.chatContent.Children.Last()?.BringIntoView();
+            }            
         }
     }
 
