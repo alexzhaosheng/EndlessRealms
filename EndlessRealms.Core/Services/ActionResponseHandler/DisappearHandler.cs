@@ -18,7 +18,7 @@ public class DisappearHandler : IActionRespondHandler
         _worldService = worldService;
     }
     
-    public async Task ProcessRespond(ActionRespond actionRespond, CharactorInfo? charInfo, Something? thing)
+    public async Task ProcessRespond(ActionRespond actionRespond, CharacterInfo? charInfo, Something? thing)
     {
         if (actionRespond.NewStatus.Equals("Disappear", StringComparison.OrdinalIgnoreCase))
         {

@@ -173,7 +173,7 @@ public partial class MainWindow : Window
             await wnd.ShowDialog(this);            
         });        
     }
-    public async Task onTalkToCharactor(CharactorInfo charInfo)
+    public async Task onTalkToCharactor(CharacterInfo charInfo)
     {
         await Dispatcher.UIThread.InvokeAsync(async () =>
         {

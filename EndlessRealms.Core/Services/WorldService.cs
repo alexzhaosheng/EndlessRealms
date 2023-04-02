@@ -210,15 +210,12 @@ namespace EndlessRealms.Core.Services
             _playIoService.ShowWorldMessage($"Moved to {direction}");
         }
 
-        internal async Task Reset()
+        internal Task Reset()
         {
             Current = null;
             CurrentWorld = null;
             _worlds.Clear();
-
-            await _persistedDataAccessor.ClearALlGameData();
-
-            await Initialize();
+            return Task.CompletedTask;
         }
 
 
@@ -236,7 +233,7 @@ namespace EndlessRealms.Core.Services
         }
        
 
-        public void Remove(CharactorInfo charInfo)
+        public void Remove(CharacterInfo charInfo)
         {
             this.Current!.Characters?.Remove(charInfo);
         }

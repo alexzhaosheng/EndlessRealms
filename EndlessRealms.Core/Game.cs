@@ -25,6 +25,9 @@ namespace EndlessRealms.Core
         private readonly ChatGPTService _gptService;
         private readonly IPersistedDataProvider _persistedDataAccessor;
         private readonly SystemStatusManager _systemStatusManager;
+
+        public PlayerInfo CurrentPlayer { get; set; } = null!;
+
         public Game(IRenderService renderService, WorldService worldService, IPlayerIoService playerIoService, ILogService logService, ChatGPTService chatGPTService, IPersistedDataProvider persistedDataAccessor, IServiceProvider serviceProvider, SystemStatusManager systemStatusManager)
         {
             _renderService = renderService;
@@ -40,6 +43,12 @@ namespace EndlessRealms.Core
         {
             try
             {
+                CurrentPlayer = (await _persistedDataAccessor.LoadPlayerInfo())!;
+                if(CurrentPlayer == null)
+                {
+                    await InitializePlayerInfo();
+                }
+
                 await _worldService.Initialize();
 
                 while (true)
@@ -54,6 +63,15 @@ namespace EndlessRealms.Core
                 _systemStatusManager.NotifyError(ex);
                 
             }
+        }
+
+        private async Task InitializePlayerInfo()
+        {
+            CurrentPlayer = new PlayerInfo();
+            var greeting = await _playerIoService.GeneralInput(MessageType.Notice, "Hi, please greet me in your language");
+            var (s, _) = await _gptService.Call<string>(t => t.LANGUAGE_ANALYSIS, ("PROMPT", greeting));
+            CurrentPlayer.Language = s;
+            await _persistedDataAccessor.SavePlayerInfo(CurrentPlayer);
         }
 
         private async Task UpdateScene()
@@ -136,7 +154,7 @@ namespace EndlessRealms.Core
             }
             return response;
         }
-        public async Task<string> TalkToCharactor(CharactorInfo targetChar, string text)
+        public async Task<string> TalkToCharactor(CharacterInfo targetChar, string text)
         {
             var history = _persistedDataAccessor!.GetChatHistory(targetChar.Id);
             var session = string.Join("\n", history.History.Select(t => $"Q:{t.Question}\nA:{t.OriginalAnswer}"));
@@ -199,7 +217,7 @@ namespace EndlessRealms.Core
             }
         }
 
-        private async Task ProcessActionRespond(ActionRespond respond, CharactorInfo? charInfo, Something? thing)
+        private async Task ProcessActionRespond(ActionRespond respond, CharacterInfo? charInfo, Something? thing)
         {
             foreach(var ah in _serviceProvider.GetServices<IActionRespondHandler>())
             {
@@ -211,12 +229,20 @@ namespace EndlessRealms.Core
         {
             if(command.Target.ToLower() == "reset_all")
             {
-                await _worldService.Reset();                
+                await Reset();
             }
             else
             {
                 await _playerIoService.InteractiveMessage(MessageType.Notice, "Invalid system command:" +  command.Target);
             }
+        }
+
+        private async Task Reset()
+        {
+            await _persistedDataAccessor.ClearAllGameData();
+            await _worldService.Reset();            
+            CurrentPlayer = null!;
+            await this.Start();
         }
     }
 }

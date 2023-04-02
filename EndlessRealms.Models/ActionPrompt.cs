@@ -22,6 +22,5 @@ public class ActionPrompt
     public ActionPromptInfo TALK_TO_THING { get; set; } = null!;
 
     public ActionPromptInfo PERFORM_ACTION_ON { get; set; } = null!;
-
-
+    public ActionPromptInfo LANGUAGE_ANALYSIS { get; set; } = null!;        
 }

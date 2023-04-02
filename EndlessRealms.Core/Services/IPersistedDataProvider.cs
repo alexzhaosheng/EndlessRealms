@@ -11,8 +11,11 @@ public interface IPersistedDataProvider
 
     IEnumerable<ApiCallSetting> LoadApiCallSettings();
     Task SaveWorld(World world);
-    Task ClearALlGameData();
+    Task ClearAllGameData();
 
     ChatHistory GetChatHistory(string characterId);
     Task SaveChatHistory(ChatHistory history);
+
+    Task<PlayerInfo?> LoadPlayerInfo();
+    Task SavePlayerInfo(PlayerInfo playerInfo);
 }
