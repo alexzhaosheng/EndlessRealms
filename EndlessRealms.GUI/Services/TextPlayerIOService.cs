@@ -150,7 +150,7 @@ internal class TextPlayerIOService : IPlayerIoService
         {
             var target = input.Substring(0, input.IndexOf(":")).Trim();
 
-            var name = scene.Charactors.FirstOrDefault(t => t.FullName.ToLower() == target.ToLower())?.FullName
+            var name = scene.Characters.FirstOrDefault(t => t.FullName.ToLower() == target.ToLower())?.FullName
                 ?? scene.Things.FirstOrDefault(t => t.Name.ToLower() == target.ToLower())?.Name;
             if (name == null)
             {

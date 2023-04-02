@@ -111,11 +111,11 @@ namespace EndlessRealms.Core.Services
                 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    _logService.Logger.Debug($"Chat GPT response:\n----------------\n{responseContent}");
-
+                    var responseContent = await response.Content.ReadAsStringAsync();                    
                     var responseObj = responseContent.JsonToObject<ChatGptResponse>();
-                    return string.Join('\n', responseObj!.choices!.Select(c => c.text));
+                    var strResponse = string.Join('\n', responseObj!.choices!.Select(c => c.text));
+                    _logService.Logger.Debug($"Chat GPT response:\n----------------\n{strResponse}");
+                    return strResponse;
                 }
                 else
                 {
