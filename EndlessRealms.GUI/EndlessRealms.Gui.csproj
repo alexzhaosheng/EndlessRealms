@@ -1,0 +1,88 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>App.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove=".gitignore" />
+  </ItemGroup>
+
+  <Target Name="CopyPredefinedFiles" AfterTargets="Build">
+    <ItemGroup>
+      <MySourceFiles Include="$(SolutionDir)Predefined\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(MySourceFiles)" DestinationFiles="$(TargetDir)Predefined\%(RecursiveDir)%(Filename)%(Extension)" />
+  </Target>
+  
+  <ItemGroup>
+    <TrimmerRootDescriptor Include="Roots.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="0.10.18" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.18" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.18" />
+    <PackageReference Include="ReactiveUI" Version="18.4.26" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.4.0" />    
+    <PackageReference Include="XamlNameReferenceGenerator" Version="1.5.1" />
+
+    <PackageReference Include="Serilog" Version="2.12.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EndlessRealms.Core\EndlessRealms.Core.csproj" />
+    <ProjectReference Include="..\EndlessRealms.Enviroment\EndlessRealms.LocalEnv.csproj" />
+    <ProjectReference Include="..\EndlessRealms.Models\EndlessRealms.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Component\CharOrThingUi.axaml.cs">
+      <DependentUpon>CharOrThingUi.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Component\WorldMap.axaml.cs">
+      <DependentUpon>WorldMap.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appSettings.dev.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="appSettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Predefined\Actions\Action.actionprompt.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Predefined\Actions\Create.actionprompt.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Predefined\Actions\Talk.actionprompt.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Predefined\ChaptgptCall.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Predefined\WorldTypes\Fairyland.erworldtype.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Component\DirectionUi.axaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="App.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Component\TalkWindow.axaml" />
+  </ItemGroup>
+</Project>

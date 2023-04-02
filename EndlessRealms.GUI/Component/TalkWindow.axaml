@@ -1,0 +1,59 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Width="500" Height="650"
+        x:Class="EndlessRealms.Gui.Component.TalkWindow"    
+        ShowInTaskbar="False"    
+        WindowStartupLocation ="CenterOwner"
+        Background="Black"
+        Foreground="White"
+        Title="TalkWindow">
+  <Window.Styles>
+    <Style Selector="TextBlock.Asker">
+      <Setter Property="Margin" Value="3 10 60 0"></Setter>
+      <Setter Property="FontWeight" Value="Bold"></Setter>
+      <Setter Property="TextAlignment" Value="Left"></Setter>
+      <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+      <Setter Property="Foreground" Value="Magenta"></Setter>
+    </Style>
+    <Style Selector="TextBlock.Question">
+      <Setter Property="Margin" Value="3 3 60 6"></Setter>
+      <Setter Property="Foreground" Value="Black"></Setter>
+      <Setter Property="Background" Value="LightBlue"></Setter>
+      <Setter Property="TextAlignment" Value="Left"></Setter>
+      <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+      <Setter Property="TextWrapping" Value="Wrap"></Setter>
+      <Setter Property="Padding" Value="6 4"></Setter>
+    </Style>
+
+    <Style Selector="TextBlock.Responder">
+      <Setter Property="Margin" Value="60 10 20 0"></Setter>
+      <Setter Property="FontWeight" Value="Bold"></Setter>
+      <Setter Property="TextAlignment" Value="Right"></Setter>
+      <Setter Property="HorizontalAlignment" Value="Right"></Setter>
+      <Setter Property="Foreground" Value="Magenta"></Setter>
+    </Style>
+    <Style Selector="TextBlock.Answer">
+      <Setter Property="Margin" Value="60 3 20 6"></Setter>
+      <Setter Property="Foreground" Value="Black"></Setter>
+      <Setter Property="Background" Value="LightGreen"></Setter>
+      <Setter Property="TextAlignment" Value="Left"></Setter>
+      <Setter Property="HorizontalAlignment" Value="Right"></Setter>
+      <Setter Property="TextWrapping" Value="Wrap"></Setter>
+      <Setter Property="Padding" Value="6 4"></Setter>
+    </Style>
+  </Window.Styles>
+  <Grid RowDefinitions="*,45">
+    <ScrollViewer x:Name="scrollViewer" Grid.Row="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible">
+      <StackPanel x:Name="chatContent" Margin="10 10 10 10"></StackPanel>
+    </ScrollViewer>
+
+    <Grid Grid.Row="1" ColumnDefinitions="*,40" Margin="4">
+      <TextBox x:Name="inputBox"                     
+                     Grid.Column="0" Classes="input" Margin="0"></TextBox>
+      <Button x:Name="sendInputButton" Grid.Column="1" HorizontalAlignment="Right" Margin="0" Click="SendInputButton_Click">=></Button>
+    </Grid>
+  </Grid>
+</Window>

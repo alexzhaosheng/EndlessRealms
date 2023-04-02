@@ -1,0 +1,98 @@
+!!!! CREATE_WORLD; DEFAULT_LONG
+I'll give the description about an imaginary world. You will:
+1.Make a cool name for the world
+2.Write a lively and wildly imaginative description for this world
+3.Write a few adjective words for this world
+You response is in YAML object style, start with --- end with ...
+Here's an example:
+Description:
+A cyberpunk style world.
+Your response:
+---
+Name:Cybertopia
+Description: Cybertopia is a vibrant, bustling metropolis, teeming with people and activity. High-tech skyscrapers and flying cars soar above the city, while flashing neon signs and holograms light up the night. The streets are filled with colorful characters, each living their own unique story. 
+AdjectiveWords: 
+- Futuristic 
+- Colorful
+- Vibrant
+- High-tech
+- Holographic
+...
+
+Now lets start:
+Description:
+{PROMPT}
+Your response:
+
+
+!!!! CREATE_REGIONS; DEFAULT_LONG
+Generate a YAML object response for the request below.
+I'll give the description about an imaginary world. You will:
+1.Imagine 3 to 6 regions that fit to this world, like "Dragon glass mountain", "Store city", "Springwood Shire" etc. Don't use the example names.
+2.Make a cool name for each of the region
+3.Make a lively and wildly imaginative description for the region. Do not inclue the original world description in the new description.
+4.Give out the teritorry complexity of the region, put it into "Complexity" property.   Complexity is a number from 1~10, 10 is most complex. 10 for the place that has a lot of road like city, 1 for the place with only 1 way.
+5.Give out the size of the region, put it into "Size" property. Size is a number from 1 to 10, the place with big area or variety like hudge ciry, it's 10.
+You response is in YAML object style, start with --- end with ...
+Here's an example:
+Description:
+Cybertopia is a bustling metropolis with high-tech skyscrapers, flying cars, and colorful characters, where neon signs and holograms light up the night.
+Your response:
+---
+-Name: Neonopolis
+ Description: Neonopolis is a bustling city of the future, illuminated by a million neon lights and holograms that light up the night sky. Its soaring skyscrapers are a testament to the city's advanced technology and the streets are filled with a colorful array of characters, each living out their own unique story.
+ Complexity: 8
+ Size: 6
+...
+
+Note in my example, I only give out 1 regions, but in your response, you should randomly generate from 3 to 6 regions. 
+Now let's start:
+Description:
+{PROMPT}
+Your response:
+
+!!!! CREATE_SCENE; DEFAULT_LONG
+I'll give you the description of of a location in the imaginary world. Imagine you are infront of this location. 
+1.Create a lively and wildly imaginative description for the view infront of you. "In front of you", and DO NOT put the name of the world into the description. 
+2.Imagine serveral type of things for this scene, which can be people, animals, plants, machines or anything else, they can be real or fictional. 
+  For each type of the things:
+  a. Give it a name
+  b. Assign a number: 1-2 for large things and 1-5 for small things.
+  c. If it's ianimate, set IsIanimate to true
+3.Image serveral charactors for this scene. Charactors can be human,robot magical animals or anything that can interactive with human.
+You response is in YAML object style, start with --- end with ...
+Here is an example:
+
+My description£º
+Location: Neonopolis: a future city with neon lights, soaring skyscrapers, and colorful characters living unique stories.
+World: Cybertopia is a bustling metropolis with high-tech skyscrapers, flying cars, and colorful characters, where neon signs and holograms light up the night.
+Your Response:
+---
+Description: In front of you, the street bustles with life and activity. High-tech skyscrapers soar high above, with flying cars darting between them. Holograms and neon signs light up the night, creating a colorful and vibrant atmosphere. The sounds of people and activity fill the air.
+Charactors: 
+- FullName: Johnny Silverhand
+  Race: Human
+  Title: Soul of Samurai
+  Sex: Male,
+  Age: 38
+  Appearance: Johnny Silverhand is a punk rock-inspired character with a cybernetic arm and a silvered left hand. He has a rugged, masculine appearance with short, spiky hair and a beard.
+  Personality: Rebellious, charismatic, impulsive, vengeful, and haunted by his past.
+  FriendnessLevel:3
+Things:
+- Name: Cyberhawk
+  Description: A brightly colored robotic hawk, with glowing eyes and wings of metal.
+  Number: 1
+  IsIanimate: true  
+- Name: Cyberflower
+  Description: A strange flower made of metal and wires, with a glowing center.
+  Number: 5
+  IsIanimate: false
+...
+
+My example only give out 2 things. In your response, the number of things to imagine depends on the region. For example, in barren areas like deserts, only 0-2 things should be imagined. In a city, 6-8 things can be imagined.
+My example only give out 1 charactor. In your reponse,  for crowded places, create up to 4 characters. For open areas, usually no characters are created, but occasionally 1 to 2 characters can be created.
+Now let's start:
+My Description:
+Location:{LOCATION_PROMPT}
+World:{WORLD_PROMPT}
+Your response:
