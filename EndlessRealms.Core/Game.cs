@@ -25,7 +25,10 @@ namespace EndlessRealms.Core
         private readonly ChatGPTService _gptService;
         private readonly IPersistedDataProvider _persistedDataAccessor;
         private readonly SystemStatusManager _systemStatusManager;
-        public Game(IRenderService renderService, WorldService worldService, IPlayerIoService playerIoService, ILogService logService, ChatGPTService chatGPTService, IPersistedDataProvider persistedDataAccessor, IServiceProvider serviceProvider, SystemStatusManager systemStatusManager)
+        private readonly GameContext _gameContext;
+        
+
+        public Game(IRenderService renderService, WorldService worldService, IPlayerIoService playerIoService, ILogService logService, ChatGPTService chatGPTService, IPersistedDataProvider persistedDataAccessor, IServiceProvider serviceProvider, SystemStatusManager systemStatusManager, GameContext gameContext)
         {
             _renderService = renderService;
             _worldService = worldService;
@@ -35,11 +38,18 @@ namespace EndlessRealms.Core
             _persistedDataAccessor = persistedDataAccessor;
             _serviceProvider = serviceProvider;
             _systemStatusManager = systemStatusManager;
+            _gameContext = gameContext;
         }
         public async Task Start()
         {
             try
             {
+                _gameContext.CurrentPlayerInfo = (await _persistedDataAccessor.LoadPlayerInfo())!;
+                if(_gameContext.CurrentPlayerInfo == null)
+                {
+                    await InitializePlayerInfo();
+                }
+
                 await _worldService.Initialize();
 
                 while (true)
@@ -54,6 +64,15 @@ namespace EndlessRealms.Core
                 _systemStatusManager.NotifyError(ex);
                 
             }
+        }
+
+        private async Task InitializePlayerInfo()
+        {
+            _gameContext.CurrentPlayerInfo = new PlayerInfo();
+            var greeting = await _playerIoService.GeneralInput(MessageType.Notice, "Hi, please greet me in your language");
+            var (s, _) = await _gptService.Call<string>(t => t.LANGUAGE_ANALYSIS, ("PROMPT", greeting));
+            _gameContext.CurrentPlayerInfo.Language = s;
+            await _persistedDataAccessor.SavePlayerInfo(_gameContext.CurrentPlayerInfo);
         }
 
         private async Task UpdateScene()
@@ -136,7 +155,7 @@ namespace EndlessRealms.Core
             }
             return response;
         }
-        public async Task<string> TalkToCharactor(CharactorInfo targetChar, string text)
+        public async Task<string> TalkToCharactor(CharacterInfo targetChar, string text)
         {
             var history = _persistedDataAccessor!.GetChatHistory(targetChar.Id);
             var session = string.Join("\n", history.History.Select(t => $"Q:{t.Question}\nA:{t.OriginalAnswer}"));
@@ -186,6 +205,7 @@ namespace EndlessRealms.Core
 
                 await _playerIoService.InteractiveMessage(MessageType.Normal, $"You perform \"{command.Detail}\" on {command.Target}");
                 var (respond, _) = await _gptService.Call<ActionRespond>((pmt) => pmt.PERFORM_ACTION_ON,
+                    ("{PLAYER_LANGUAGE}", _gameContext.CurrentPlayerInfo.Language),
                     ("{CHAR_INFO}", charInfoStr),
                     ("{ACTION}", command.Detail!));
 
@@ -199,7 +219,7 @@ namespace EndlessRealms.Core
             }
         }
 
-        private async Task ProcessActionRespond(ActionRespond respond, CharactorInfo? charInfo, Something? thing)
+        private async Task ProcessActionRespond(ActionRespond respond, CharacterInfo? charInfo, Something? thing)
         {
             foreach(var ah in _serviceProvider.GetServices<IActionRespondHandler>())
             {
@@ -211,12 +231,20 @@ namespace EndlessRealms.Core
         {
             if(command.Target.ToLower() == "reset_all")
             {
-                await _worldService.Reset();                
+                await Reset();
             }
             else
             {
                 await _playerIoService.InteractiveMessage(MessageType.Notice, "Invalid system command:" +  command.Target);
             }
+        }
+
+        private async Task Reset()
+        {
+            await _persistedDataAccessor.ClearAllGameData();
+            await _worldService.Reset();
+            _gameContext.CurrentPlayerInfo = null!;
+            await this.Start();
         }
     }
 }

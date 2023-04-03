@@ -1,0 +1,12 @@
+!!!! LANGUAGE_ANALYSIS; DEFAULT
+I'll give you a piece of text, please tell me what is the language it is.
+For example:
+Text:
+Hello!
+Language:
+English
+
+Now let's start:
+Text:
+{PROMPT}
+Language:

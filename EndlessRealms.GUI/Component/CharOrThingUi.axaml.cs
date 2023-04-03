@@ -20,8 +20,8 @@ public partial class CharOrThingUi : UserControl
         }
     }
 
-    private CharactorInfo? _charactor;
-    public CharactorInfo? Charactor 
+    private CharacterInfo? _charactor;
+    public CharacterInfo? Character 
     {
         get => _charactor;
         set
@@ -43,19 +43,16 @@ public partial class CharOrThingUi : UserControl
         {
             this.numberText.Text = this.Thing.Number.ToString();
             this.descriptionText.Text = $"{this.Thing.Name}";
-            this.descriptionText.Foreground = Brushes.LightGreen;
-            ToolTip.SetTip(this, this.Thing.Description);
+            this.descriptionText.Foreground = Brushes.LightGreen;            
         }
         else
         {
             this.numberText.Text = "";
             this.descriptionText.Foreground = Brushes.Magenta;
-            this.descriptionText.Text = this.Charactor!.FullName + (
-                string.IsNullOrWhiteSpace(this.Charactor!.Title) 
+            this.descriptionText.Text = this.Character!.FullName + (
+                string.IsNullOrWhiteSpace(this.Character!.Title) 
                 ? "" 
-                : $"({this.Charactor.Title})");
-
-            ToolTip.SetTip(this, this.Charactor.Appearance);
+                : $"({this.Character.Title})"); 
         }
     }
 
@@ -67,7 +64,7 @@ public partial class CharOrThingUi : UserControl
         }
         else
         {
-            SetAtion?.Invoke(this, $"@{Charactor!.FullName}:");
+            SetAtion?.Invoke(this, $"@{Character!.FullName}:");
         }
     }
     public void OnActionClicked(object sender, RoutedEventArgs e) 
@@ -78,7 +75,7 @@ public partial class CharOrThingUi : UserControl
         }
         else
         {
-            SetAtion?.Invoke(this, $"!{Charactor!.FullName}:");
+            SetAtion?.Invoke(this, $"!{Character!.FullName}:");
         }
     }
 

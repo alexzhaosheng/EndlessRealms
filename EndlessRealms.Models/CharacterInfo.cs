@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace EndlessRealms.Models;
 
-public enum CharactorStatus
+public enum CharacterStatus
 {
     Normal,
     Attack,
     Follow
 }
-public class CharactorInfo
+public class CharacterInfo
 {
     public string Id { get; set; }
     public string FullName { get; set; } = null!;
@@ -22,10 +22,10 @@ public class CharactorInfo
     public string? Age { get; set; } = null!;
     public string? Appearance { get; set; } = null!;
     public string? Personality { get; set; } = null!;
-    public CharactorStatus Status { get; set; } = CharactorStatus.Normal;
+    public CharacterStatus Status { get; set; } = CharacterStatus.Normal;
     public int FriendnessLevel { get; set; } = 5;
 
-    public CharactorInfo()
+    public CharacterInfo()
     {
         Id = Guid.NewGuid().ToString();
     }

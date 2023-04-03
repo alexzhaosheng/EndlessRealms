@@ -139,7 +139,7 @@ public partial class MainWindow : Window
             {
                 var u = new CharOrThingUi()
                 {
-                    Charactor = c
+                    Character = c
                 };
                 thingsAndCharPanel.Children.Add(u);
                 u.SetAtion += CharAndThingUi_SetAtion;
@@ -173,7 +173,7 @@ public partial class MainWindow : Window
             await wnd.ShowDialog(this);            
         });        
     }
-    public async Task onTalkToCharactor(CharactorInfo charInfo)
+    public async Task onTalkToCharactor(CharacterInfo charInfo)
     {
         await Dispatcher.UIThread.InvokeAsync(async () =>
         {

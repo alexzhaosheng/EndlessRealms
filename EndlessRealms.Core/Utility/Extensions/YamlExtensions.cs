@@ -14,6 +14,10 @@ public static class YamlExtensions
 
     public static object? YamlToObject(this string data, Type objType)
     {
+        if(objType == typeof(string))
+        {
+            return data;
+        }
         return new YamlLikeParser().Parse(objType, data);        
     }
 }

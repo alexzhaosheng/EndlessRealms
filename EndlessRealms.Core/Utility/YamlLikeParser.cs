@@ -73,8 +73,8 @@ public class YamlLikeParser
             
             if (line.EndsWith(':'))
             {
-                var pName = line.Substring(0, line.Length - 1).Trim();
-                var property = properties.FirstOrDefault(properties => properties.Name == pName);
+                var pName = NormalizePropertyName(line.Substring(0, line.Length - 1));
+                var property = properties.FirstOrDefault(p => p.Name == pName);
                 if(property != null && !property.PropertyType.IsValueType && property.PropertyType != typeof(String))
                 {
                     _currentLine++;
@@ -95,9 +95,9 @@ public class YamlLikeParser
                 var pos = line.IndexOf(':');
                 if(pos > 0)
                 {
-                    var pName = line.Substring(0, pos).Trim();
+                    var pName = NormalizePropertyName(line.Substring(0, pos));
                     var value = line.Substring(pos +1).Trim();
-                    var property = properties.FirstOrDefault(properties => properties.Name == pName);
+                    var property = properties.FirstOrDefault(p => p.Name == pName);
                     if (property != null && !usedProperties.Contains(pName))
                     {
                         if ((property.PropertyType.IsArray || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>)))
@@ -126,6 +126,19 @@ public class YamlLikeParser
         }
 
         return obj;
+    }
+
+    private string NormalizePropertyName(string name)
+    {
+        name = name.Trim();
+        if (name.StartsWith("@"))
+        {
+            return name.Substring(1);
+        }
+        else
+        {
+            return name;
+        }
     }
 
     private string RemoveQuote(string value)

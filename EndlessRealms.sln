@@ -21,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{A586
 	ProjectSection(SolutionItems) = preProject
 		Predefined\Actions\Action.actionprompt.txt = Predefined\Actions\Action.actionprompt.txt
 		Predefined\Actions\Create.actionprompt.txt = Predefined\Actions\Create.actionprompt.txt
+		Predefined\Actions\Language.actionprompt.txt = Predefined\Actions\Language.actionprompt.txt
 		Predefined\Actions\Talk.actionprompt.txt = Predefined\Actions\Talk.actionprompt.txt
 	EndProjectSection
 EndProject

@@ -10,9 +10,13 @@ namespace EndlessRealms.LocalEnv;
 [Service(typeof(IPersistedDataProvider))]
 public class FilePersistedDataProvider: IPersistedDataProvider
 {
-	private string GetStatusFolder(string path)
+	private string GetStatusFolder(string? path = null)
 	{
-		var folder = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!, "Status", path);
+		var folder = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!, "Status");
+        if(path != null)
+        {
+            folder = Path.Combine(folder, path);
+        }
 		if (!Directory.Exists(folder))
 		{
 			Directory.CreateDirectory(folder);
@@ -117,14 +121,15 @@ public class FilePersistedDataProvider: IPersistedDataProvider
         }
     }
 
-    public Task ClearALlGameData()
+    public Task ClearAllGameData()
     {
         var files = Directory.GetFiles(GetStatusFolder("Worlds"), "*.erworld.json");
 		foreach (var file in files)
 		{
 			File.Delete(file);
 		}
-		return Task.CompletedTask;
+        File.Delete(Path.Combine(GetStatusFolder(), "Player.json"));
+        return Task.CompletedTask;
     }
 
     public ChatHistory GetChatHistory(string characterId)
@@ -144,6 +149,26 @@ public class FilePersistedDataProvider: IPersistedDataProvider
         var file = Path.Combine(GetStatusFolder("ChatHistory"), $"{history.CharacterId}.chat.json");
         using var sw = new StreamWriter(file);
         sw.Write(history.ToJsonString());
+        return Task.CompletedTask;
+    }
+
+    public Task<PlayerInfo?> LoadPlayerInfo()
+    {
+        var file = Path.Combine(GetStatusFolder(), "Player.json");
+        if(!File.Exists(file))
+        {
+            return Task.FromResult<PlayerInfo?>(null);
+        }
+        using var sr = new StreamReader(file);
+        var json = sr.ReadToEnd();
+        return Task.FromResult(json.JsonToObject<PlayerInfo>());
+    }
+
+    public Task SavePlayerInfo(PlayerInfo playerInfo)
+    {
+        var file = Path.Combine(GetStatusFolder(), "Player.json");
+        using var sw = new StreamWriter(file);
+        sw.Write(playerInfo.ToJsonString());
         return Task.CompletedTask;
     }
 }

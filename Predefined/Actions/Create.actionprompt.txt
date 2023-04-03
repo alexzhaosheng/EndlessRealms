@@ -3,23 +3,34 @@ I'll give the description about an imaginary world. You will:
 1.Make a cool name for the world
 2.Write a lively and wildly imaginative description for this world
 3.Write a few adjective words for this world
-You response is in YAML object style, start with --- end with ...
+You response is in YAML object style, start with --- end with ... Some of the field in your response will be translated into the player language. Those fields started with "@", please refer the example.
 Here's an example:
+Player language: English
 Description:
 A cyberpunk style world.
 Your response:
 ---
-Name:Cybertopia
-Description: Cybertopia is a vibrant, bustling metropolis, teeming with people and activity. High-tech skyscrapers and flying cars soar above the city, while flashing neon signs and holograms light up the night. The streets are filled with colorful characters, each living their own unique story. 
+@Name:Cybertopia
+@Description: Cybertopia is a vibrant, bustling metropolis, teeming with people and activity. High-tech skyscrapers and flying cars soar above the city, while flashing neon signs and holograms light up the night. The streets are filled with colorful characters, each living their own unique story. 
 AdjectiveWords: 
-- Futuristic 
-- Colorful
-- Vibrant
-- High-tech
-- Holographic
+  - Futuristic 
+  - Colorful
+  - Vibrant
+  - High-tech
+  - Holographic
 ...
 
+If the player language is Chinese, the above example response should be:
+---
+@Name:赛博乌托邦
+@Description: 赛博乌托邦是一个充满活力、繁华的大都市，人来人往、热闹非凡。高科技摩天大楼和飞行汽车在城市上空翱翔，闪烁的霓虹灯和全息投影在夜晚照亮着整个城市。街道上满是各种五颜六色的人物，每个人都有着自己独特的故事。
+AdjectiveWords:
+  - Futuristic 
+  - Colorful
+ ...The remaining portion is omitted...
+
 Now lets start:
+Player language: {PLAYER_LANGUAGE}
 Description:
 {PROMPT}
 Your response:
@@ -33,20 +44,30 @@ I'll give the description about an imaginary world. You will:
 3.Make a lively and wildly imaginative description for the region. Do not inclue the original world description in the new description.
 4.Give out the teritorry complexity of the region, put it into "Complexity" property.   Complexity is a number from 1~10, 10 is most complex. 10 for the place that has a lot of road like city, 1 for the place with only 1 way.
 5.Give out the size of the region, put it into "Size" property. Size is a number from 1 to 10, the place with big area or variety like hudge ciry, it's 10.
-You response is in YAML object style, start with --- end with ...
+You response is in YAML object style, start with --- end with ... Some of the field in your response will be translated into the player language. Those fields started with "@", please refer the example.
 Here's an example:
+Player language: English
 Description:
 Cybertopia is a bustling metropolis with high-tech skyscrapers, flying cars, and colorful characters, where neon signs and holograms light up the night.
 Your response:
 ---
--Name: Neonopolis
- Description: Neonopolis is a bustling city of the future, illuminated by a million neon lights and holograms that light up the night sky. Its soaring skyscrapers are a testament to the city's advanced technology and the streets are filled with a colorful array of characters, each living out their own unique story.
+-@Name: Neonopolis
+ @Description: Neonopolis is a bustling city of the future, illuminated by a million neon lights and holograms that light up the night sky. Its soaring skyscrapers are a testament to the city's advanced technology and the streets are filled with a colorful array of characters, each living out their own unique story.
+ Complexity: 8
+ Size: 6
+...
+
+If the player language is Chinese, the above example response should be:
+---
+-@Name: 霓虹之城
+ @Description: 霓虹之城 是一个未来繁华的城市，夜晚被数百万霓虹灯和全息投影照亮。高耸入云的摩天大楼证明了这座城市的先进技术，街道上充满各种五彩缤纷的人物，每个人都在展现着自己独特的故事。
  Complexity: 8
  Size: 6
 ...
 
 Note in my example, I only give out 1 regions, but in your response, you should randomly generate from 3 to 6 regions. 
 Now let's start:
+Player language: {PLAYER_LANGUAGE}
 Description:
 {PROMPT}
 Your response:
@@ -60,40 +81,51 @@ I'll give you the description of of a location in the imaginary world. Imagine y
   b. Assign a number: 1-2 for large things and 1-5 for small things.
   c. If it's ianimate, set IsIanimate to true
 3.Image serveral charactors for this scene. Characters can be human,robot magical animals or anything that can interactive with human.
-You response is in YAML object style, start with --- and end with ...
+You response is in YAML object style, start with --- end with . Some of the field in your response will be translated into the player language. Those fields started with "@", please refer the example.
 Here is an example:
-
+Player language: English
 My description:
 Location: Neonopolis: a future city with neon lights, soaring skyscrapers, and colorful characters living unique stories.
 World: Cybertopia is a bustling metropolis with high-tech skyscrapers, flying cars, and colorful characters, where neon signs and holograms light up the night.
 Your Response:
 ---
-Description: In front of you, the street bustles with life and activity. High-tech skyscrapers soar high above, with flying cars darting between them. Holograms and neon signs light up the night, creating a colorful and vibrant atmosphere. The sounds of people and activity fill the air.
-Characters:
-  - FullName: Johnny Silverhand
-    Race: Human
-    Title: Soul of Samurai
-    Sex: Male,
+@Description: In front of you, the street bustles with life and activity. High-tech skyscrapers soar high above, with flying cars darting between them. Holograms and neon signs light up the night, creating a colorful and vibrant atmosphere. The sounds of people and activity fill the air.                         
+Charactors:
+  - @FullName: Johnny Silverhand   
+    @Race: Human
+    @Title: Soul of Samurai
+    @Sex: Male
     Age: 38
-    Appearance: Johnny Silverhand is a punk rock-inspired character with a cybernetic arm and a silvered left hand. He has a rugged, masculine appearance with short, spiky hair and a beard.
-    Personality: Rebellious, charismatic, impulsive, vengeful, and haunted by his past.
+    @Appearance: Johnny Silverhand is a punk rock-inspired character with a cybernetic arm and a silvered left hand. He has a rugged, masculine appearance with short, spiky hair and a beard.  
+    Personality: Rebellious, charismatic, impulsive, vengeful, and haunted by his past.  
     FriendnessLevel:3
+  - @FullName: Judie   
+ ...The remaining charactor is omitted...
 
 Things:
-  - Name: Cyberhawk
-    Description: A brightly colored robotic hawk, with glowing eyes and wings of metal.
+  - @Name: Cyberhawk
+    @Description: A brightly colored robotic hawk, with glowing eyes and wings of metal.  
     Number: 1
     IsIanimate: true  
-  - Name: Cyberflower
-    Description: A strange flower made of metal and wires, with a glowing center.
+  - @Name: Cyberflower
+    @Description: A strange flower made of metal and wires, with a glowing center.
     Number: 5
     IsIanimate: false
+ ...The remaining things is omitted...
 ...
-  
+
+If the player language is Chinese, the above example should be:
+Description: 在你的面前，街道上充满了生命和活力。高科技摩天大楼高耸入云，飞行汽车在它们之间穿梭。全息图和霓虹灯在夜晚闪耀，营造出一种丰富多彩、充满活力的氛围。人们和活动的声音充斥着空气。                    
+Charactors:
+  - @FullName: 强尼银手     
+     Personality: Rebellious, charismatic, impulsive, vengeful, and haunted by his past.  
+ ...The remaining portion is omitted...
+
 My example only give out 2 things. In your response, the number of things to imagine depends on the region. For example, in barren areas like deserts, only 0-2 things should be imagined. In a city, 6-8 things can be imagined.
 My example only give out 1 charactor. In your reponse,  for crowded places, create up to 4 characters. For open areas, usually no characters are created, but occasionally 1 to 2 characters can be created.
-Don't forget to insert the line break between each piece of data!
+
 Now let's start:
+Player language: {PLAYER_LANGUAGE}
 My Description:
 Location:{LOCATION_PROMPT}
 World:{WORLD_PROMPT}

@@ -10,5 +10,5 @@ public class TalkToThingRespond
 {
     public string Answer { get; set; } = null!;    
     public string ActionType { get; set; } = null!;
-    public CharactorInfo? CharactorInfo { get; set; }
+    public CharacterInfo? CharactorInfo { get; set; }
 }

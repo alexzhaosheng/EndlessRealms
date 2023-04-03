@@ -9,5 +9,5 @@ using System.Threading.Tasks;
 namespace EndlessRealms.Core.Services.ActionResponseHandler;
 public interface IActionRespondHandler
 {
-    Task ProcessRespond(ActionRespond actionRespond, CharactorInfo? charInfo, Something? thing);
+    Task ProcessRespond(ActionRespond actionRespond, CharacterInfo? charInfo, Something? thing);
 }

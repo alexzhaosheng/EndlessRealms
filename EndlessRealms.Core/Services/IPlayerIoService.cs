@@ -47,6 +47,6 @@ public interface IPlayerIoService
     Task<bool> GeneralConfirm(MessageType messageType, string prompt);
     InteractionInfo WaitInputForScene(Scene scene);
     Task TalkToThing(string target);
-    Task TalkToCharactor(CharactorInfo charInfo);
+    Task TalkToCharactor(CharacterInfo charInfo);
     void ShowWorldMessage(string message);    
 }

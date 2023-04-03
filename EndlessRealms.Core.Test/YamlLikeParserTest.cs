@@ -101,6 +101,24 @@ Description: The quick brown fox
 
 
     [Test]
+    public void TestWithLanguagePrefix()
+    {
+        string yamlData = @"
+@Name: Cyberpunk
+AdjectiveWords: 
+ -Cold
+ -Deadly
+@Description: The quick brown fox
+";
+        var world = new YamlLikeParser().Parse<World>(yamlData);
+        Assert.That(world.Name, Is.EqualTo("Cyberpunk"));
+        Assert.That(world.Description, Is.EqualTo("The quick brown fox"));
+        Assert.That(world.AdjectiveWords, Is.EquivalentTo(new[] { "Cold", "Deadly" }));
+    }
+
+
+
+    [Test]
     public void BadDataTest()
     {
         var yamlData = @"
@@ -194,49 +212,44 @@ Location:
     public void BadDataTest3()
     {
         var yamlData = @"
-Description: In front of you, an incredible view stretches out. The majestic mountain peaks reach towards the clouds, and the lush green forests span for miles. Ancient ruins are dotted across the landscape, and in the night sky thousands of stars twinkle with a beautiful light. The air is filled with a magical ambience that can be felt by all who enter this enchanting realm.
 
-Characters:
+---
+Description: In front of you, the valley stretches out as far as the eye can see. Ancient castles made of stone dot the landscape, while towering mountains loom in the distance. A wave of stars fills the night sky, shimmering like diamonds in an endless sea. The air is crisp and clean, carrying with it a sense of mystery and possibility. 
+Characters: 
+- FullName: Galadriel
 
-  - FullName: Eliza Nightstar
+  Race: Elf
 
-    Race: Elf
+  Title: Lady of Light
 
-    Title: Queen of Astaria
+  Sex: Female
 
-    Sex: Female 
+  Age: Immortal
 
-    Age: 300
+  Appearance: Galadriel has long golden hair and luminous green eyes. She is always dressed in a flowing white robe adorned with silver jewelry and carries a wooden staff which glows with an inner light.
 
-    Appearance: Eliza is a tall and graceful elf with ivory skin and long, silver hair cascading down her back. She wears an elegant dress made of deep purple velvet, adorned with gold embroidery and jewels. Her eyes are a brilliant blue color that twinkle in the starlight. 
-
-    Personality: Wise, kind-hearted, regal and respectful of nature. 
-
-    FriendnessLevel :4
+  Personality: Wise, compassionate, and mysterious but also capable of great strength when needed. 
+  FriendnessLevel : 5
   
-Things: 
+Things:
+- Name:Magical Tree
 
-  - Name : Silver Moonflower 
+ Description:A tall tree that stands high above the valley floor with branches that reach up to touch the stars in the sky. Its trunk is made from ancient wood covered in moss and glow brightly when touched by moonlight.   
+ Number : 1 
+ IsIanimate : False
 
-    Description : A delicate flower with petals of shimmering silver that glows in the moonlight .  
+- Name:Starfire Dragon
 
-     Number : 3    
-
-     IsIanimate : false  
-  
-  - Name : Magical Eagle 
-
-      Description : An eagle made out of pure magic , its feathers shimmering like rainbows when it flies through the air .  
-      
-      Number : 2  
-      
-      IsIanimate : true
+ Description:A huge dragon whose scales shimmer like stars against its jet black body as it soars through the night sky on powerful wings tipped with flames of gold fire .  
+ Number : 2
+ IsIanimate : True  
+...
 ";
         var scene = new YamlLikeParser().Parse<Scene>(yamlData);
-        Assert.That(scene.Description, Does.Contain("an incredible view stretches out"));
+        Assert.That(scene.Description, Does.Contain("In front of you, the valley stretches"));
         Assert.That(scene.Characters.Count, Is.EqualTo(1));
-        Assert.That(scene.Characters[0].FullName, Is.EqualTo("Eliza Nightstar"));
-        Assert.That(scene.Characters[0].FriendnessLevel, Is.EqualTo(4));
+        Assert.That(scene.Characters[0].FullName, Is.EqualTo("Galadriel"));
+        Assert.That(scene.Characters[0].FriendnessLevel, Is.EqualTo(5));
         Assert.That(scene.Things.Count, Is.EqualTo(2));
     }
 }

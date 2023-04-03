@@ -11,7 +11,7 @@ namespace EndlessRealms.Gui.Component;
 public partial class TalkWindow : Window
 {
     public string? Target { get; set; }
-    public CharactorInfo? TargetChar { get; set; }
+    public CharacterInfo? TargetChar { get; set; }
 
     public ServiceProvider ServiceProvider { get; set; } = null!;
 
@@ -109,10 +109,7 @@ public partial class TalkWindow : Window
                 AddAnswer(item.Answer);
             }
 
-            if(chatContent.Children.Count > 0)
-            {
-                this.chatContent.Children.Last()?.BringIntoView();
-            }            
+            this.chatContent.Children.Last().BringIntoView();
         }
     }
 

@@ -205,8 +205,8 @@ internal class TextPlayerIOService : IPlayerIoService
         }        
     }
 
-    public Func<CharactorInfo, Task>? TalkToCharCallback { get; set; }    
-    public async Task TalkToCharactor(CharactorInfo charInfo)
+    public Func<CharacterInfo, Task>? TalkToCharCallback { get; set; }    
+    public async Task TalkToCharactor(CharacterInfo charInfo)
     {
         if (TalkToCharCallback != null)
         {
