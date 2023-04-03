@@ -90,7 +90,7 @@ World: Cybertopia is a bustling metropolis with high-tech skyscrapers, flying ca
 Your Response:
 ---
 @Description: In front of you, the street bustles with life and activity. High-tech skyscrapers soar high above, with flying cars darting between them. Holograms and neon signs light up the night, creating a colorful and vibrant atmosphere. The sounds of people and activity fill the air.                         
-Charactors:
+Characters:
   - @FullName: Johnny Silverhand   
     @Race: Human
     @Title: Soul of Samurai
@@ -116,14 +116,14 @@ Things:
 
 If the player language is Chinese, the above example should be:
 Description: 在你的面前，街道上充满了生命和活力。高科技摩天大楼高耸入云，飞行汽车在它们之间穿梭。全息图和霓虹灯在夜晚闪耀，营造出一种丰富多彩、充满活力的氛围。人们和活动的声音充斥着空气。                    
-Charactors:
+Characters:
   - @FullName: 强尼银手     
      Personality: Rebellious, charismatic, impulsive, vengeful, and haunted by his past.  
  ...The remaining portion is omitted...
 
 My example only give out 2 things. In your response, the number of things to imagine depends on the region. For example, in barren areas like deserts, only 0-2 things should be imagined. In a city, 6-8 things can be imagined.
 My example only give out 1 charactor. In your reponse,  for crowded places, create up to 4 characters. For open areas, usually no characters are created, but occasionally 1 to 2 characters can be created.
-
+You must insert line break after each piece of data
 Now let's start:
 Player language: {PLAYER_LANGUAGE}
 My Description:
