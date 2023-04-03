@@ -22,8 +22,9 @@ namespace EndlessRealms.Core.Services
         private readonly IRenderService _renderService;
         private readonly ILogService _logService;
         private readonly SystemStatusManager _statusManager;
+        private readonly GameContext _gameContext;
 
-        public WorldService(ChatGPTService gptService, IPersistedDataProvider statusLoader, IPlayerIoService playIoService, IRenderService renderService, ILogService logService, SystemStatusManager statusManager)
+        public WorldService(ChatGPTService gptService, IPersistedDataProvider statusLoader, IPlayerIoService playIoService, IRenderService renderService, ILogService logService, SystemStatusManager statusManager, GameContext gameContext)
         {
             _gptService = gptService;
             _persistedDataAccessor = statusLoader;
@@ -31,6 +32,7 @@ namespace EndlessRealms.Core.Services
             _renderService = renderService;
             _logService = logService;
             _statusManager = statusManager;
+            _gameContext = gameContext;
         }
 
 
@@ -70,7 +72,9 @@ namespace EndlessRealms.Core.Services
                 await _statusManager.ExecWithStatus(SystemStatus.Working, "Creating new world",
                     async () =>
                     {
-                        var (w, _) = await _gptService.Call<World>(p => p.CREATE_WORLD, ("{PROMPT}", prompt));
+                        var (w, _) = await _gptService.Call<World>(p => p.CREATE_WORLD, 
+                            ("{PROMPT}", prompt),
+                            ("{PLAYER_LANGUAGE}", _gameContext.CurrentPlayerInfo.Language));
                         newWorld = w;
                     });
 
@@ -85,7 +89,9 @@ namespace EndlessRealms.Core.Services
             await _statusManager.ExecWithStatus(SystemStatus.Working, "Creating regions for the world",
                    async () =>
                    {
-                       var regions = (await _gptService.CallForArray<Region>(p => p.CREATE_REGIONS, ("{PROMPT}", newWorld.Description)))!;
+                       var regions = (await _gptService.CallForArray<Region>(p => p.CREATE_REGIONS, 
+                           ("{PROMPT}", newWorld.Description),
+                           ("{PLAYER_LANGUAGE}", _gameContext.CurrentPlayerInfo.Language)))!;
                        newWorld.Regions = regions;
                    });
 
@@ -101,6 +107,7 @@ namespace EndlessRealms.Core.Services
                 async () =>
                 {
                     var (s, _) = await _gptService.Call<Scene>(pmt => pmt.CREATE_SCENE,
+                        ("{PLAYER_LANGUAGE}", _gameContext.CurrentPlayerInfo.Language),
                         ("{LOCATION_PROMPT}", region.Description!),
                         ("{WORLD_PROMPT}", world.Description));
                     scene = s;

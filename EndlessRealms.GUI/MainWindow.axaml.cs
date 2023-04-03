@@ -139,7 +139,7 @@ public partial class MainWindow : Window
             {
                 var u = new CharOrThingUi()
                 {
-                    Charactor = c
+                    Character = c
                 };
                 thingsAndCharPanel.Children.Add(u);
                 u.SetAtion += CharAndThingUi_SetAtion;

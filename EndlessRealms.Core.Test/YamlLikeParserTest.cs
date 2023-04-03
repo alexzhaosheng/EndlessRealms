@@ -101,6 +101,24 @@ Description: The quick brown fox
 
 
     [Test]
+    public void TestWithLanguagePrefix()
+    {
+        string yamlData = @"
+@Name: Cyberpunk
+AdjectiveWords: 
+ -Cold
+ -Deadly
+@Description: The quick brown fox
+";
+        var world = new YamlLikeParser().Parse<World>(yamlData);
+        Assert.That(world.Name, Is.EqualTo("Cyberpunk"));
+        Assert.That(world.Description, Is.EqualTo("The quick brown fox"));
+        Assert.That(world.AdjectiveWords, Is.EquivalentTo(new[] { "Cold", "Deadly" }));
+    }
+
+
+
+    [Test]
     public void BadDataTest()
     {
         var yamlData = @"
@@ -129,7 +147,7 @@ Description: CyberVista is an otherworldly world of awe and danger. The land is 
 
 AdjectiveWords: magical, futuristic, surreal, dangerous, vibrant
 
-Charactors:
+Characters:
  - FullName: Vanna Lupus
    Title: Sorceress
    Sex: Female
@@ -197,7 +215,7 @@ Location:
 
 ---
 Description: In front of you, the valley stretches out as far as the eye can see. Ancient castles made of stone dot the landscape, while towering mountains loom in the distance. A wave of stars fills the night sky, shimmering like diamonds in an endless sea. The air is crisp and clean, carrying with it a sense of mystery and possibility. 
-Charactors: 
+Characters: 
 - FullName: Galadriel
 
   Race: Elf

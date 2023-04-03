@@ -25,10 +25,10 @@ namespace EndlessRealms.Core
         private readonly ChatGPTService _gptService;
         private readonly IPersistedDataProvider _persistedDataAccessor;
         private readonly SystemStatusManager _systemStatusManager;
+        private readonly GameContext _gameContext;
+        
 
-        public PlayerInfo CurrentPlayer { get; set; } = null!;
-
-        public Game(IRenderService renderService, WorldService worldService, IPlayerIoService playerIoService, ILogService logService, ChatGPTService chatGPTService, IPersistedDataProvider persistedDataAccessor, IServiceProvider serviceProvider, SystemStatusManager systemStatusManager)
+        public Game(IRenderService renderService, WorldService worldService, IPlayerIoService playerIoService, ILogService logService, ChatGPTService chatGPTService, IPersistedDataProvider persistedDataAccessor, IServiceProvider serviceProvider, SystemStatusManager systemStatusManager, GameContext gameContext)
         {
             _renderService = renderService;
             _worldService = worldService;
@@ -38,13 +38,14 @@ namespace EndlessRealms.Core
             _persistedDataAccessor = persistedDataAccessor;
             _serviceProvider = serviceProvider;
             _systemStatusManager = systemStatusManager;
+            _gameContext = gameContext;
         }
         public async Task Start()
         {
             try
             {
-                CurrentPlayer = (await _persistedDataAccessor.LoadPlayerInfo())!;
-                if(CurrentPlayer == null)
+                _gameContext.CurrentPlayerInfo = (await _persistedDataAccessor.LoadPlayerInfo())!;
+                if(_gameContext.CurrentPlayerInfo == null)
                 {
                     await InitializePlayerInfo();
                 }
@@ -67,11 +68,11 @@ namespace EndlessRealms.Core
 
         private async Task InitializePlayerInfo()
         {
-            CurrentPlayer = new PlayerInfo();
+            _gameContext.CurrentPlayerInfo = new PlayerInfo();
             var greeting = await _playerIoService.GeneralInput(MessageType.Notice, "Hi, please greet me in your language");
             var (s, _) = await _gptService.Call<string>(t => t.LANGUAGE_ANALYSIS, ("PROMPT", greeting));
-            CurrentPlayer.Language = s;
-            await _persistedDataAccessor.SavePlayerInfo(CurrentPlayer);
+            _gameContext.CurrentPlayerInfo.Language = s;
+            await _persistedDataAccessor.SavePlayerInfo(_gameContext.CurrentPlayerInfo);
         }
 
         private async Task UpdateScene()
@@ -204,6 +205,7 @@ namespace EndlessRealms.Core
 
                 await _playerIoService.InteractiveMessage(MessageType.Normal, $"You perform \"{command.Detail}\" on {command.Target}");
                 var (respond, _) = await _gptService.Call<ActionRespond>((pmt) => pmt.PERFORM_ACTION_ON,
+                    ("{PLAYER_LANGUAGE}", _gameContext.CurrentPlayerInfo.Language),
                     ("{CHAR_INFO}", charInfoStr),
                     ("{ACTION}", command.Detail!));
 
@@ -240,8 +242,8 @@ namespace EndlessRealms.Core
         private async Task Reset()
         {
             await _persistedDataAccessor.ClearAllGameData();
-            await _worldService.Reset();            
-            CurrentPlayer = null!;
+            await _worldService.Reset();
+            _gameContext.CurrentPlayerInfo = null!;
             await this.Start();
         }
     }
