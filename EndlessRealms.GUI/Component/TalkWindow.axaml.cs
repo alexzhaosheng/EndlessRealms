@@ -30,6 +30,12 @@ public partial class TalkWindow : Window
         UpdateDisplay();
     }
 
+    protected override void OnClosed(EventArgs e)
+    {
+        base.OnClosed(e);
+        ServiceProvider.GetService<SystemStatusManager>()!.StatusChanged -= StatusManager_StatusChanged;
+    }
+
     private void StatusManager_StatusChanged(object? sender, StatusChangedEventArg e)
     {
         this.inputBox.IsVisible = (e.TheCurrent != SystemStatus.Working);
