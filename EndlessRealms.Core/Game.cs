@@ -69,7 +69,7 @@ namespace EndlessRealms.Core
         private async Task InitializePlayerInfo()
         {
             _gameContext.CurrentPlayerInfo = new PlayerInfo();
-            var greeting = await _playerIoService.GeneralInput(MessageType.Notice, "Hi, please greet me in your language");
+            var greeting = await _playerIoService.GeneralInput(MessageType.Notice, "Hello, please say a sentence in your language to me, and from then on, I will generate the world in your language. Please don't make it too short to avoid me mistaking your language");
             var (s, _) = await _gptService.Call<string>(t => t.LANGUAGE_ANALYSIS, ("PROMPT", greeting));
             _gameContext.CurrentPlayerInfo.Language = s;
             await _persistedDataAccessor.SavePlayerInfo(_gameContext.CurrentPlayerInfo);
@@ -129,7 +129,8 @@ namespace EndlessRealms.Core
 
             var (response, _) = await _gptService.Call<TalkToThingRespond>(
                 (pmt) => pmt.TALK_TO_THING,
-                ("{CHAT_SESSION}", pmtInfo));
+                ("{CHAT_SESSION}", pmtInfo),
+                ("{PLAYER_LANGUAGE}", _gameContext.CurrentPlayerInfo.Language));
 
             if (response != null)
             {
@@ -164,6 +165,7 @@ namespace EndlessRealms.Core
             var (response, origMsg) = await _gptService.Call<TalkToCharRespond>(
                 (pmt) => pmt.TALK_TO_CHARACTOR,
                 ("{CHAT_SESSION}", session),
+                ("{PLAYER_LANGUAGE}", _gameContext.CurrentPlayerInfo.Language),
                 ("{CHARACTER}", targetChar.Personality!),
                 ("{APPEARANCE}", targetChar.Appearance!));
 

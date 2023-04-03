@@ -6,6 +6,11 @@ Hello!
 Language:
 English
 
+Text:
+你好,很高兴见到你
+Language:
+Chinese
+
 Now let's start:
 Text:
 {PROMPT}
