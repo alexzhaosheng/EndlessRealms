@@ -27,9 +27,8 @@ If the player language is Chinese, the above example response should be:
 @Description: 赛博乌托邦是一个充满活力、繁华的大都市，人来人往、热闹非凡。高科技摩天大楼和飞行汽车在城市上空翱翔，闪烁的霓虹灯和全息投影在夜晚照亮着整个城市。街道上满是各种五颜六色的人物，每个人都有着自己独特的故事。
 AdjectiveWords:
   - Futuristic 
-  - Colorful
+  - Colorful 
  [OMITTED]
-
 Now lets start:
 Player language: {PLAYER_LANGUAGE}
 Description:
@@ -102,8 +101,7 @@ Characters:
     @Appearance: Johnny Silverhand is a punk rock-inspired character with a cybernetic arm and a silvered left hand. He has a rugged, masculine appearance with short, spiky hair and a beard.  
     Personality: Rebellious, charismatic, impulsive, vengeful, and haunted by his past.  
     FriendnessLevel:3
-  - @FullName: Judie   
- [OMITTED]
+  
 
 Things:
   - @Name: Cyberhawk
@@ -113,8 +111,7 @@ Things:
   - @Name: Cyberflower
     @Description: A strange flower made of metal and wires, with a glowing center.
     Number: 5
-    IsIanimate: false
- [OMITTED]
+    IsIanimate: false 
 ...
 
 If the player language is Chinese, the above example should be:
@@ -122,8 +119,11 @@ Description: 在你的面前，街道上充满了生命和活力。高科技摩�
 Characters:
   - @FullName: 强尼银手     
      Personality: Rebellious, charismatic, impulsive, vengeful, and haunted by his past.  
- [OMITTED]
-
+    @Race: 人类
+    @Title: 武侍之魂
+    @Sex: 男
+    Age: 38
+    [OMITTED]
 My example only give out 2 things. In your response, the number of things to imagine depends on the region. For example, in barren areas like deserts, only 0-2 things should be imagined. In a city, 6-8 things can be imagined.
 My example only give out 1 charactor. In your reponse,  for crowded places, create up to 4 characters. For open areas, usually no characters are created, but occasionally 1 to 2 characters can be created.
 You must insert line break after each piece of data.

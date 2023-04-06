@@ -24,7 +24,7 @@ Status: Normal
 Apperience: He wears a leather jacket with a Samurai logo on the back, a red bulletproof vest, black pants, and boots.
 FriendlinessLevel:2
 
-I'm dong this action:  shot on the heart
+I'm dong this action:  Talk to you: Hello
 Your Reaction :
 ---
 @Reaction: Johnny SilverHand covered his chest, stared at me and said, "How dare you..." and then he collapsed and died

@@ -13,8 +13,8 @@ public interface IPersistedDataProvider
     Task SaveWorld(World world);
     Task ClearAllGameData();
 
-    ChatHistory GetChatHistory(string characterId);
-    Task SaveChatHistory(ChatHistory history);
+    Task<ActionHistory> GetActionHistory(string characterId);
+    Task SaveActionHistory(ActionHistory history);
 
     Task<PlayerInfo?> LoadPlayerInfo();
     Task SavePlayerInfo(PlayerInfo playerInfo);
