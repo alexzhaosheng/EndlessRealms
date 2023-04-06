@@ -9,8 +9,7 @@
              x:Class="EndlessRealms.Gui.Component.CharOrThingUi">
   
   <StackPanel Orientation="Horizontal" Margin="20 5 0 5">
-    <Button Click="OnTalkClicked">@</Button>
-    <Button Click="OnActionClicked">!</Button>
+    <Button Click="DoAction">@</Button>    
     <TextBlock x:Name="numberText"
                Foreground="White"
                Margin="5 0 5 0"

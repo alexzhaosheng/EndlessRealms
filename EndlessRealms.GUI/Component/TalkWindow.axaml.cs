@@ -3,6 +3,7 @@ using EndlessRealms.Core;
 using EndlessRealms.Core.Services;
 using EndlessRealms.Models;
 using Microsoft.Extensions.DependencyInjection;
+using ReactiveUI;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,6 +16,8 @@ public partial class TalkWindow : Window
 
     public ServiceProvider ServiceProvider { get; set; } = null!;
 
+    private ActionSession _actionSession = null!;
+
     public TalkWindow()
     {
         InitializeComponent();
@@ -26,8 +29,9 @@ public partial class TalkWindow : Window
     {
         base.OnOpened(e);
 
+
         ServiceProvider.GetService<SystemStatusManager>()!.StatusChanged += StatusManager_StatusChanged;
-        UpdateDisplay();
+        Initialize();
     }
 
     protected override void OnClosed(EventArgs e)
@@ -57,7 +61,7 @@ public partial class TalkWindow : Window
     private async Task DoInput()
     {
         var text = this.inputBox.Text.Trim();
-        if (string.IsNullOrEmpty(text))
+        if (string.IsNullOrEmpty(text) || text == "!")
         {
             return;
         }
@@ -66,53 +70,43 @@ public partial class TalkWindow : Window
         AddQuestion(text);
         this.chatContent.Children.Last().BringIntoView();
 
-        if (TargetChar == null)
-        {            
-            var response = await ServiceProvider.GetService<Game>()!.TalkToThing(Target!, text);
-            if (response?.CharactorInfo != null)
-            {
-                Target = null;
-                TargetChar = response.CharactorInfo;
-
-                UpdateDisplay();
-            }
-            else
-            {
-                this.Close();
-            }
+        string response;
+        if (text.StartsWith("!"))
+        {
+            response = await _actionSession.Talk(text);
         }
         else
         {
-            var response = await ServiceProvider.GetService<Game>()!.TalkToCharactor(TargetChar, text);
-            AddAnswer(response);
-
-            this.chatContent.Children.Last().BringIntoView();
+            response = await _actionSession.Perform(text.Substring(1));
         }
+        
+        AddAnswer(response);
     }
 
-    private ChatHistory? _history;
-    private void UpdateDisplay()
+    private async void Initialize()
     {
-        this.Title = $"Talk to {(Target ?? TargetChar!.FullName)}";
+        this.Title = $"Talk to {TargetChar!.FullName}";
+        this.targetName.Text = TargetChar.FullName;
+        this.targetDes.Text = TargetChar.Appearance;
 
-        if (TargetChar != null && _history == null)
+        _actionSession = ServiceProvider.GetService<ActionSession>()!;
+        
+        await _actionSession.Initialize(TargetChar!);
+
+        if (TargetChar != null)
         {
-            _history = ServiceProvider.GetService<IPersistedDataProvider>()!.GetChatHistory(this.TargetChar!.Id);
+            var history = _actionSession.ActionHistory;
             chatContent.Children.Clear();
-            foreach (var item in _history.History)
+            foreach (var item in history.History)
             {
-                if (item.Question != null)
+                if (item.Action != null)
                 {
-                    AddQuestion(item.Question);
+                    AddQuestion(item.Action);
                 }
 
-                AddAnswer(item.Answer);
+                AddAnswer(item.Response);
             }
-
-            if(this.chatContent.Children.Count > 0)
-            {
-                this.chatContent.Children.Last().BringIntoView();
-            }            
+                  
         }
     }
 
@@ -128,6 +122,11 @@ public partial class TalkWindow : Window
             Text = answer,
             Classes = new Classes("Answer")
         });
+
+        if (this.chatContent.Children.Count > 0)
+        {
+            this.chatContent.Children.Last().BringIntoView();
+        }
     }
 
     private void AddQuestion(string question)
@@ -142,5 +141,11 @@ public partial class TalkWindow : Window
             Text = question,
             Classes = new Classes("Question")
         });
+        
+
+        if (this.chatContent.Children.Count > 0)
+        {
+            this.chatContent.Children.Last().BringIntoView();
+        }
     }  
 }

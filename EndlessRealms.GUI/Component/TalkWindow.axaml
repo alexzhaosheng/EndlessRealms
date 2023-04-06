@@ -3,7 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Width="500" Height="650"
+        Width="600" SizeToContent="Height"
         x:Class="EndlessRealms.Gui.Component.TalkWindow"    
         ShowInTaskbar="False"    
         WindowStartupLocation ="CenterOwner"
@@ -45,15 +45,21 @@
       <Setter Property="Padding" Value="6 4"></Setter>
     </Style>
   </Window.Styles>
-  <Grid RowDefinitions="*,45">
-    <ScrollViewer x:Name="scrollViewer" Grid.Row="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible">
-      <StackPanel x:Name="chatContent" Margin="10 10 10 10"></StackPanel>
-    </ScrollViewer>
+  <StackPanel Margin="4">
+    <TextBlock x:Name="targetName" FontSize="18" Foreground="Yellow">Name</TextBlock>
+    <TextBlock x:Name="targetDes" TextWrapping="Wrap" Margin="0 5">The quick brown fox jumps over the lazy dog</TextBlock>
+    <Border BorderBrush="LightGreen" BorderThickness="1">
+      <ScrollViewer Height="500" x:Name="scrollViewer" Grid.Row="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible">
+        <StackPanel x:Name="chatContent" Margin="10 10 10 10"></StackPanel>
+      </ScrollViewer>
+    </Border>
 
-    <Grid Grid.Row="1" ColumnDefinitions="*,40" Margin="4">
+    <TextBlock Margin="0 10 0 0" Grid.Row="1">Type what you want to say.</TextBlock>
+    <TextBlock> Start with "!" to perform an aciton. eg:"!hug" to hug </TextBlock>
+    <Grid Grid.Row="2" ColumnDefinitions="*,40" Margin="0 4">
       <TextBox x:Name="inputBox"                     
                      Grid.Column="0" Classes="input" Margin="0"></TextBox>
       <Button x:Name="sendInputButton" Grid.Column="1" HorizontalAlignment="Right" Margin="0" Click="SendInputButton_Click">=></Button>
     </Grid>
-  </Grid>
+  </StackPanel>
 </Window>

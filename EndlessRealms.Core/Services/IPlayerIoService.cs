@@ -39,7 +39,7 @@ public class InteractionInfo
     }
 }
 
-public interface IPlayerIoService
+public interface IPlayerIoServiceX
 {
     Task<string> GeneralInput(MessageType messageType, string prompt);
     Task InteractiveMessage(MessageType messageType, string prompt);
