@@ -56,11 +56,9 @@
           <Grid Grid.Column="0" RowDefinitions="400,*">
             <Grid Grid.Row="0">
               <StackPanel Margin="2 10 2 2">
-                <Button x:Name="clearDataButton">Clear Game Data</Button>
+                <Button IsEnabled="True" x:Name="clearDataButton">Clear All Game Data !!!</Button>
               </StackPanel>
-            </Grid>
-
-            <com:WorldMap></com:WorldMap>
+            </Grid>            
 
           </Grid>
 

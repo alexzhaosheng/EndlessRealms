@@ -15,7 +15,7 @@ namespace EndlessRealms.Core;
 [Service(Lifetime = Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient)]
 public class ActionSession
 {
-    private CharacterInfo _character = null!;
+    private IActionTarget _actionTarget = null!;
 
     public ActionHistory ActionHistory { get; private set; } = null!;
 
@@ -29,11 +29,11 @@ public class ActionSession
         _gameContext = gameContext;
     }
 
-    public async Task Initialize(CharacterInfo targetChar)
+    public async Task Initialize(IActionTarget target)
     {
-        _character = targetChar;
+        _actionTarget = target;
 
-        ActionHistory = await _persistedDataProvider.GetActionHistory(_character.Id);
+        ActionHistory = await _persistedDataProvider.GetActionHistory(_actionTarget.Id);
     }
 
     public Task<string> Talk(string text)
@@ -44,8 +44,8 @@ public class ActionSession
     public async Task<string> Perform(string action)
     {        
         var session = string.Join("\n", ActionHistory.History.Select(t => $"A:{t.Action}\nR:{t.Response}"));
-        session += $"\nFriendnessLevel:{_character.FriendnessLevel}\nA:{action}\nR:";
-        var charInfo = $"Name:{_character.FullName}\nAppearance:{_character.Appearance}\nPersonality:{_character.Personality}";
+        session += $"\nFriendnessLevel:{_actionTarget.FriendnessLevel}\nA:{action}\nR:";
+        var charInfo = _actionTarget.GetFullInfo();
         var (response, origMsg) = await _chatGPTService.Call<TalkToCharRespond>(
                 t => t.TALK_TO_CHARACTOR,
                 ("{ACTION_SESSION}", session),

@@ -238,7 +238,7 @@ public partial class MainWindow : Window
         var (thing, charactor) = e;
         new TalkWindow()
         {
-            TargetChar = charactor,
+            ActionTarget = (thing as IActionTarget ?? charactor)!,
             ServiceProvider = this._serviceProvider
         }
         .ShowDialog(this);

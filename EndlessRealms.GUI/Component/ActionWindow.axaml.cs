@@ -1,6 +1,8 @@
 using Avalonia.Controls;
 using EndlessRealms.Core;
 using EndlessRealms.Core.Services;
+using EndlessRealms.Core.Services.ActionResponseHandler;
+using EndlessRealms.Core.Services.ChatGptDto;
 using EndlessRealms.Models;
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
@@ -11,8 +13,7 @@ using System.Threading.Tasks;
 namespace EndlessRealms.Gui.Component;
 public partial class TalkWindow : Window
 {
-    public string? Target { get; set; }
-    public CharacterInfo? TargetChar { get; set; }
+    public IActionTarget ActionTarget { get; set; } = null!;
 
     public ServiceProvider ServiceProvider { get; set; } = null!;
 
@@ -85,28 +86,24 @@ public partial class TalkWindow : Window
 
     private async void Initialize()
     {
-        this.Title = $"Talk to {TargetChar!.FullName}";
-        this.targetName.Text = TargetChar.FullName;
-        this.targetDes.Text = TargetChar.Appearance;
+        this.Title = $"Interaction with {ActionTarget?.Name}";
+        this.targetName.Text = ActionTarget.Name;
+        this.targetDes.Text = ActionTarget.Description;
 
         _actionSession = ServiceProvider.GetService<ActionSession>()!;
-        
-        await _actionSession.Initialize(TargetChar!);
 
-        if (TargetChar != null)
+        await _actionSession.Initialize(ActionTarget);
+
+        var history = _actionSession.ActionHistory;
+        chatContent.Children.Clear();
+        foreach (var item in history.History)
         {
-            var history = _actionSession.ActionHistory;
-            chatContent.Children.Clear();
-            foreach (var item in history.History)
+            if (item.Action != null)
             {
-                if (item.Action != null)
-                {
-                    AddQuestion(item.Action);
-                }
-
-                AddAnswer(item.Response);
+                AddQuestion(item.Action);
             }
-                  
+
+            AddAnswer(item.Response);
         }
     }
 
@@ -114,7 +111,7 @@ public partial class TalkWindow : Window
     {
         chatContent.Children.Add(new TextBlock() 
         {
-            Text = Target ?? TargetChar!.FullName,            
+            Text = ActionTarget.Name,            
             Classes = new Classes("Responder")
         });
         chatContent.Children.Add(new TextBlock()
@@ -147,5 +144,13 @@ public partial class TalkWindow : Window
         {
             this.chatContent.Children.Last().BringIntoView();
         }
-    }  
+    }
+
+    private async Task ProcessActionRespond(ActionRespond respond, CharacterInfo? charInfo, Something? thing)
+    {
+        foreach (var ah in ServiceProvider.GetServices<IActionRespondHandler>())
+        {
+            await ah.ProcessRespond(respond, charInfo, thing);
+        }
+    }
 }
