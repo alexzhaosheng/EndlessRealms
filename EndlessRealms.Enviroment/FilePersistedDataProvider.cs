@@ -132,21 +132,21 @@ public class FilePersistedDataProvider: IPersistedDataProvider
         return Task.CompletedTask;
     }
 
-    public ChatHistory GetChatHistory(string characterId)
+    public Task<ActionHistory> GetActionHistory(string characterId)
     {
-        var file = Path.Combine(GetStatusFolder("ChatHistory"), $"{characterId}.chat.json");
+        var file = Path.Combine(GetStatusFolder("ActionHistory"), $"{characterId}.actionhistory.json");
         if(!File.Exists(file))
         {
-            return new ChatHistory(characterId);
+            return Task.FromResult(new ActionHistory(characterId));
         }
         using var sr = new StreamReader(file);
         var json = sr.ReadToEnd();
-        return json.JsonToObject<ChatHistory>()!;
+        return Task.FromResult(json.JsonToObject<ActionHistory>()!);
     }
 
-    public Task SaveChatHistory(ChatHistory history)
+    public Task SaveActionHistory(ActionHistory history)
     {
-        var file = Path.Combine(GetStatusFolder("ChatHistory"), $"{history.CharacterId}.chat.json");
+        var file = Path.Combine(GetStatusFolder("ActionHistory"), $"{history.CharacterId}.actionhistory.json");
         using var sw = new StreamWriter(file);
         sw.Write(history.ToJsonString());
         return Task.CompletedTask;

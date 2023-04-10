@@ -51,33 +51,20 @@
           <TextBlock Classes="header">Game</TextBlock>
         </TabItem.Header>
 
-        <Grid ColumnDefinitions="400,4,*">
+        <Grid ColumnDefinitions="300,4,*">
 
           <Grid Grid.Column="0" RowDefinitions="400,*">
             <Grid Grid.Row="0">
               <StackPanel Margin="2 10 2 2">
-                <TextBlock FontSize="18" Margin="0 20">Commands</TextBlock>
-
-                <TextBlock Foreground="LightBlue">>[direction]</TextBlock>
-                <TextBlock TextWrapping="Wrap">Move to the direction.</TextBlock>
-                <TextBlock TextWrapping="Wrap" Margin="0 0 0 10">ex:>e to east, >w to west, >s to sourth, >n to north</TextBlock>
-
-                <TextBlock Foreground="LightBlue">@[target]</TextBlock>
-                <TextBlock TextWrapping="Wrap" Margin="0 0 0 10">Talk with this target.</TextBlock>                
-
-                <TextBlock Foreground="LightBlue">![target]:[action]</TextBlock>
-                <TextBlock TextWrapping="Wrap">Do something to target.</TextBlock>
-                <TextBlock TextWrapping="Wrap" Margin="0 0 0 10">ex:'@cat:catch', catch the cat</TextBlock>
+                <Button IsEnabled="True" x:Name="clearDataButton">Clear All Game Data !!!</Button>
               </StackPanel>
-            </Grid>
-
-            <com:WorldMap></com:WorldMap>
+            </Grid>            
 
           </Grid>
 
           <GridSplitter Grid.Column="1" Width="5" Background="#222222" ResizeDirection="Columns" ></GridSplitter>
 
-          <Grid Grid.Column="2" RowDefinitions="*,150,120,30">
+          <Grid Grid.Column="2" RowDefinitions="*,150,150">
             <Border  Grid.Row="0">
               <ScrollViewer x:Name="sceneView" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible">
                 <StackPanel>
@@ -120,12 +107,7 @@
                   <TextBlock Padding="5 2 5 1" Text="{Binding HistoryInteractiveMessage}" VerticalAlignment="Bottom"  Foreground="Gray"></TextBlock>
                 </StackPanel>
               </ScrollViewer>
-            </Border>
-
-            <TextBox x:Name="inputBox"
-                     IsVisible="{Binding Path=CurrentSystemStatus, Converter={StaticResource nullIsTrue}}"
-                     Grid.Row="3" Classes="input" Margin="0 4 35 4"></TextBox>
-            <Button x:Name="sendInputButton" Grid.Row="3" HorizontalAlignment="Right" Margin="0 0 0 0">=></Button>
+            </Border>         
           </Grid>
         </Grid>
       </TabItem>
@@ -144,6 +126,19 @@
         </Grid>
       </TabItem>
     </TabControl>
+
+    <Grid x:Name="generalInputDialog" IsVisible="False">
+      <Border Background="Black" Opacity="0.5"></Border>
+      <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="700">
+        <TextBlock Padding="5" FontSize="18" x:Name="generalInputMsgText" HorizontalAlignment="Left" TextAlignment="Left" TextWrapping="Wrap"></TextBlock>
+        <TextBox Margin="5" Height="200" x:Name="generalInputText"></TextBox>
+        <Grid ColumnDefinitions="*, 80">
+            <TextBlock Grid.Column="0" x:Name="generalErrorMessage" Foreground="Red"></TextBlock>
+            <Button Grid.Column="1" x:Name="generalInputOkButton" HorizontalAlignment="Right" Padding="20 5">Ok</Button>
+        </Grid>
+
+      </StackPanel>
+    </Grid>
 
     <Grid Grid.Row="1" Background="DarkGreen" Margin="2 5">
       <Grid IsVisible="{Binding Path=CurrentSystemStatus, Converter={StaticResource nullIsFalse}}" ColumnDefinitions="32,*" Margin="5 1">

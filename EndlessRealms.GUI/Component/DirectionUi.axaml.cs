@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using EndlessRealms.Models;
 using System;
 
 namespace EndlessRealms.Gui.Component;
@@ -20,9 +21,9 @@ public partial class DirectionUi : UserControl
     {
         if (_directionInfo != null)
         {
-            SetDirection?.Invoke(this, ">" + _directionInfo.Direction.GetValueOrDefault().ToString().Substring(0, 1));
+            SetDirection?.Invoke(this, _directionInfo.Direction!.Value);
         }
     }
 
-    public event EventHandler<string>? SetDirection;
+    public event EventHandler<Direction>? SetDirection;
 }

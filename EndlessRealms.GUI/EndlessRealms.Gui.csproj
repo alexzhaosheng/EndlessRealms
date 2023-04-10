@@ -45,6 +45,9 @@
     <Compile Update="Component\CharOrThingUi.axaml.cs">
       <DependentUpon>CharOrThingUi.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Component\ActionWindow.axaml.cs">
+      <DependentUpon>ActionWindow.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Component\WorldMap.axaml.cs">
       <DependentUpon>WorldMap.axaml</DependentUpon>
     </Compile>
@@ -80,9 +83,5 @@
 
   <ItemGroup>
     <Content Include="App.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Component\TalkWindow.axaml" />
   </ItemGroup>
 </Project>

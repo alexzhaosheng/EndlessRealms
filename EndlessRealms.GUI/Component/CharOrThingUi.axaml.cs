@@ -56,28 +56,10 @@ public partial class CharOrThingUi : UserControl
         }
     }
 
-    public void OnTalkClicked(object sender, RoutedEventArgs e) 
-    { 
-        if (Thing != null)
-        {
-            SetAtion?.Invoke(this, $"@{Thing.Name}:");
-        }
-        else
-        {
-            SetAtion?.Invoke(this, $"@{Character!.FullName}:");
-        }
-    }
-    public void OnActionClicked(object sender, RoutedEventArgs e) 
+    public void DoAction(object sender, RoutedEventArgs e) 
     {
-        if (Thing != null)
-        {
-            SetAtion?.Invoke(this, $"!{Thing.Name}:");
-        }
-        else
-        {
-            SetAtion?.Invoke(this, $"!{Character!.FullName}:");
-        }
+        ActionOn?.Invoke(this, (Thing, Character));        
     }
-
-    public event EventHandler<string>? SetAtion;
+    
+    public event EventHandler<(Something?, CharacterInfo?)>? ActionOn;
 }

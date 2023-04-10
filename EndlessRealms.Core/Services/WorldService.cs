@@ -18,17 +18,17 @@ namespace EndlessRealms.Core.Services
     {
         private readonly ChatGPTService _gptService;
         private readonly IPersistedDataProvider _persistedDataAccessor;
-        private readonly IPlayerIoService _playIoService;
+        private readonly PlayerIoManager _playIoMgr;
         private readonly IRenderService _renderService;
         private readonly ILogService _logService;
         private readonly SystemStatusManager _statusManager;
         private readonly GameContext _gameContext;
 
-        public WorldService(ChatGPTService gptService, IPersistedDataProvider statusLoader, IPlayerIoService playIoService, IRenderService renderService, ILogService logService, SystemStatusManager statusManager, GameContext gameContext)
+        public WorldService(ChatGPTService gptService, IPersistedDataProvider statusLoader, PlayerIoManager playIoService, IRenderService renderService, ILogService logService, SystemStatusManager statusManager, GameContext gameContext)
         {
             _gptService = gptService;
             _persistedDataAccessor = statusLoader;
-            _playIoService = playIoService;
+            _playIoMgr = playIoService;
             _renderService = renderService;
             _logService = logService;
             _statusManager = statusManager;
@@ -68,19 +68,19 @@ namespace EndlessRealms.Core.Services
             World newWorld = null!;
             while (true)
             {
-                string prompt = await _playIoService.GeneralInput(MessageType.Notice, userMessage)!;
+                string? prompt = await _playIoMgr.Input(InputType.GeneralInput, userMessage, (s)=> (s.Length > 10, "Must be a longer text."));
                 await _statusManager.ExecWithStatus(SystemStatus.Working, "Creating new world",
                     async () =>
                     {
                         var (w, _) = await _gptService.Call<World>(p => p.CREATE_WORLD, 
-                            ("{PROMPT}", prompt),
+                            ("{PROMPT}", prompt!),
                             ("{PLAYER_LANGUAGE}", _gameContext.CurrentPlayerInfo.Language));
                         newWorld = w;
                     });
 
                 _renderService.Render(newWorld!);
 
-                if (await _playIoService.GeneralConfirm(MessageType.Notice, "Is this the world you'd like to start with?"))
+                if ((await _playIoMgr.Confirm("Is this the world you'd like to start with?")).GetValueOrDefault())
                 {
                     break;
                 }
@@ -113,7 +113,7 @@ namespace EndlessRealms.Core.Services
                     scene = s;
                 });
 
-            await _playIoService.InteractiveMessage(MessageType.Notice, "New scene created.");
+            _playIoMgr.OutputMessage(OutputType.UiMessage, "New scene created.");
 
             scene.RegionId = region.Id;
             world.Scenes.Add(scene);
@@ -214,7 +214,7 @@ namespace EndlessRealms.Core.Services
             }
 
             Current = CurrentWorld!.Scenes.First(s => s.Id == Current!.ConnectedScenes[direction]);
-            _playIoService.ShowWorldMessage($"Moved to {direction}");
+            _playIoMgr.OutputMessage(OutputType.WorldMessage, $"Moved to {direction}");
         }
 
         internal Task Reset()

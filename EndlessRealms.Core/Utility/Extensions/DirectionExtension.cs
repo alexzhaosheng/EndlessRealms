@@ -33,9 +33,26 @@ public static class DirectionExtension
         }
     }
 
-    public static Direction ToDirection(this string directionStr)
+    public static Direction? ToDirection(this string directionStr)
     {
-        return (Direction)Enum.Parse(typeof(Direction), directionStr);
+        var d = directionStr.ToLower();
+        if(d == "e" || d == "east")
+        {
+            return Direction.East;
+        }
+        else if (d == "w" || d == "west")
+        {
+            return Direction.West;
+        }
+        else if (d == "n" || d == "north")
+        {
+            return Direction.West;
+        }
+        else if (d == "s" || d == "south")
+        {
+            return Direction.West;
+        }
+        return null;
     }
 
     public static Direction ToDirection(this Vector2 vector)
