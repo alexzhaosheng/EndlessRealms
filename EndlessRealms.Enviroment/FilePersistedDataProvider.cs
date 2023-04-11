@@ -73,7 +73,7 @@ public class FilePersistedDataProvider: IPersistedDataProvider
 
     public IEnumerable<ApiCallSetting> LoadApiCallSettings()
     {
-		using var streamReader = new StreamReader(Path.Combine(GetPredefinedFolder(), "ChaptgptCall.txt"));
+		using var streamReader = new StreamReader(Path.Combine(GetPredefinedFolder(), "ChatgptCall.txt"));
 		var lines = streamReader.ReadToEnd().Split('\n', '\r');
 
         var lineNumber = 0;

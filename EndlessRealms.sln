@@ -14,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EndlessRealms.Gui", "Endles
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Predefined", "Predefined", "{6DDBF3A3-9E24-4DF7-9078-977443D19CBE}"
 	ProjectSection(SolutionItems) = preProject
-		Predefined\ChaptgptCall.txt = Predefined\ChaptgptCall.txt
+		Predefined\ChatgptCall.txt = Predefined\ChatgptCall.txt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{A586D72E-0A78-488E-A419-ED161FDADB7E}"
