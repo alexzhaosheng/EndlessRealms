@@ -30,7 +30,7 @@ jobs:
         dotnet-version: '7.0.x'
 
     - name: Build and publish
-      run: dotnet publish EndlessRealms.GUI/EndlessRealms.Gui.csproj -c Release -o publish --no-self-contained --runtime ${{ matrix.os == 'windows-latest' && 'win-x64' || matrix.os == 'ubuntu-latest' && 'linux-x64' || 'osx-x64' }}
+      run: dotnet publish EndlessRealms.GUI/EndlessRealms.Gui.csproj -c Release -o publish --self-contained --runtime ${{ matrix.os == 'windows-latest' && 'win-x64' || matrix.os == 'ubuntu-latest' && 'linux-x64' || 'osx-x64' }}
 
     - name: Zip publish folder
       shell: pwsh
