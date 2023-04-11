@@ -12,13 +12,15 @@
     <None Remove=".gitignore" />
   </ItemGroup>
 
-  <Target Name="CopyPredefinedFiles" AfterTargets="Build">
-    <ItemGroup>
-      <MySourceFiles Include="$(SolutionDir)Predefined\**\*.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(MySourceFiles)" DestinationFiles="$(TargetDir)Predefined\%(RecursiveDir)%(Filename)%(Extension)" />
-  </Target>
-  
+
+  <ItemGroup>
+    <None Include="..\Predefined\Actions\Action.actionprompt.txt" Link="Predefined\Actions\Action.actionprompt.txt" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Predefined\Actions\Create.actionprompt.txt" Link="Predefined\Actions\Create.actionprompt.txt" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Predefined\Actions\Language.actionprompt.txt" Link="Predefined\Actions\Language.actionprompt.txt" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Predefined\Actions\Talk.actionprompt.txt" Link="Predefined\Actions\Talk.actionprompt.txt" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Predefined\ChatgptCall.txt" Link="Predefined\ChatgptCall.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
   <ItemGroup>
     <TrimmerRootDescriptor Include="Roots.xml" />
   </ItemGroup>
@@ -59,21 +61,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="appSettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Predefined\Actions\Action.actionprompt.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Predefined\Actions\Create.actionprompt.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Predefined\Actions\Talk.actionprompt.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Predefined\ChaptgptCall.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Predefined\WorldTypes\Fairyland.erworldtype.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

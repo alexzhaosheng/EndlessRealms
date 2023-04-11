@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <Compile Update="Services\ChatGptDto\ActionRespond.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
 
