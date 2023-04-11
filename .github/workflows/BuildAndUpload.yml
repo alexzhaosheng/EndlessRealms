@@ -1,12 +1,10 @@
 name: Build .NET Desktop App
 
 on:
-  push:
-    branches:
-      - develop,cicd
-  pull_request:
-    branches:
-      - develop
+  release:
+    types:
+      - created
+
 
 jobs:
   build:
