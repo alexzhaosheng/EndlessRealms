@@ -1,49 +1,63 @@
-name: Build and package
+name: Build .NET Desktop App
 
 on:
   push:
     branches:
-      - develop
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build-and-package:
+  build:
     runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
-        platform:
-          windows-latest: win-x64
-          ubuntu-latest: linux-x64
-          macos-latest: osx-x64
+        include:
+          - os: windows-latest
+            platform: Windows
+          - os: ubuntu-latest
+            platform: Linux
+          - os: macos-latest
+            platform: macOS
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Set up .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '6.0.x'
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '7.0.x'
 
-      - name: Get version number
-        id: get_version
-        run: |
-          version=$(grep -oP "<Version>\K[^<]+" EndlessRealms.Gui/EndlessRealms.Gui.csproj)
-          echo "::set-output name=version::$version"
+    - name: Get version from .csproj and append build number
+      id: get_version
+      shell: pwsh
+      run: |
+        $csprojPath = 'EndlessRealms.Gui\EndlessRealms.Gui.csproj'
+        $csprojContent = Get-Content -Path $csprojPath
+        $versionPattern = '<Version>(.*)<\/Version>'
+        $version = ($csprojContent -join "`n") -match $versionPattern -replace $versionPattern, '$1'
+        $versionWithBuildNumber = "$version.${env:GITHUB_RUN_NUMBER}"
+        echo "Version with build number is $versionWithBuildNumber"
+        echo "::set-output name=version_with_build_number::$versionWithBuildNumber"
 
-      - name: Build solution
-        run: msbuild /p:Configuration=Release /p:Platform=${{ matrix.platform }}
+    - name: Build and publish
+      run: dotnet publish EndlessRealms.Gui/EndlessRealms.Gui.csproj -c Release -o publish --no-self-contained --runtime ${{ matrix.os == 'windows-latest' && 'win-x64' || matrix.os == 'ubuntu-latest' && 'linux-x64' || 'osx-x64' }}
 
-      - name: Create ZIP file
-        run: |
-          version=$(/bin/bash -c "echo ${{steps.get_version.outputs.version}}")
-          zipFilename="EndlessRealms.$version.${{ matrix.platform }}.zip"
-          Compress-Archive -Path "path/to/output/folder/*" -DestinationPath $zipFilename
-          Write-Output "ZIP file created: $zipFilename"
+    - name: Zip publish folder
+      run: |
+        $zipFileName = "EndlessRealms.${{ steps.get_version.outputs.version_with_build_number }}.${{ matrix.platform }}.zip"
+        if ($env:RUNNER_OS -eq "Windows") {
+          Compress-Archive -Path publish\* -DestinationPath $zipFileName
+        } else {
+          zip -r $zipFileName publish/
+        }
+        echo "ZipFileName=$zipFileName" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: output-${{ matrix.platform }}
-          path: EndlessRealms.${{steps.get_version.outputs.version}}.${{ matrix.platform }}.zip
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.ZipFileName }}
+        path: ${{ env.ZipFileName }}
