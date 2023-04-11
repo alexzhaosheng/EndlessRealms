@@ -1,12 +1,9 @@
 name: Build .NET Desktop App
 
 on:
-  push:
-    branches:
-      - develop
-  pull_request:
-    branches:
-      - develop
+  release:
+    types:
+      - created
 
 jobs:
   build:
@@ -35,18 +32,19 @@ jobs:
       id: get_version
       shell: pwsh
       run: |
-        $csprojPath = 'EndlessRealms.Gui\EndlessRealms.Gui.csproj'
-        $csprojContent = Get-Content -Path $csprojPath
-        $versionPattern = '<Version>(.*)<\/Version>'
-        $version = ($csprojContent -join "`n") -match $versionPattern -replace $versionPattern, '$1'
+        $csprojPath = Join-Path -Path "EndlessRealms.GUI" -ChildPath "EndlessRealms.Gui.csproj" # Update this line to match the actual folder and file names
+        $xmlContent = [xml](Get-Content -Path $csprojPath)
+        $version = $xmlContent.Project.PropertyGroup.Version
         $versionWithBuildNumber = "$version.${env:GITHUB_RUN_NUMBER}"
         echo "Version with build number is $versionWithBuildNumber"
         echo "::set-output name=version_with_build_number::$versionWithBuildNumber"
 
+
     - name: Build and publish
-      run: dotnet publish EndlessRealms.Gui/EndlessRealms.Gui.csproj -c Release -o publish --no-self-contained --runtime ${{ matrix.os == 'windows-latest' && 'win-x64' || matrix.os == 'ubuntu-latest' && 'linux-x64' || 'osx-x64' }}
+      run: dotnet publish EndlessRealms.GUI/EndlessRealms.Gui.csproj -c Release -o publish --no-self-contained --runtime ${{ matrix.os == 'windows-latest' && 'win-x64' || matrix.os == 'ubuntu-latest' && 'linux-x64' || 'osx-x64' }}
 
     - name: Zip publish folder
+      shell: pwsh
       run: |
         $zipFileName = "EndlessRealms.${{ steps.get_version.outputs.version_with_build_number }}.${{ matrix.platform }}.zip"
         if ($env:RUNNER_OS -eq "Windows") {
@@ -55,6 +53,7 @@ jobs:
           zip -r $zipFileName publish/
         }
         echo "ZipFileName=$zipFileName" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
