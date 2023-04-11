@@ -1,0 +1,49 @@
+name: Build and package
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build-and-package:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        platform:
+          windows-latest: win-x64
+          ubuntu-latest: linux-x64
+          macos-latest: osx-x64
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Get version number
+        id: get_version
+        run: |
+          version=$(grep -oP "<Version>\K[^<]+" EndlessRealms.Gui/EndlessRealms.Gui.csproj)
+          echo "::set-output name=version::$version"
+
+      - name: Build solution
+        run: msbuild /p:Configuration=Release /p:Platform=${{ matrix.platform }}
+
+      - name: Create ZIP file
+        run: |
+          version=$(/bin/bash -c "echo ${{steps.get_version.outputs.version}}")
+          zipFilename="EndlessRealms.$version.${{ matrix.platform }}.zip"
+          Compress-Archive -Path "path/to/output/folder/*" -DestinationPath $zipFilename
+          Write-Output "ZIP file created: $zipFilename"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: output-${{ matrix.platform }}
+          path: EndlessRealms.${{steps.get_version.outputs.version}}.${{ matrix.platform }}.zip
