@@ -295,7 +295,7 @@ public partial class MainWindow : Window
     private static IConfiguration BuildConfig() =>
         new ConfigurationBuilder()
                 .AddJsonFile("./appSettings.json", false, false)
-                .AddJsonFile("./appSettings.dev.json", false, true)
+                .AddJsonFile("./appSettings.dev.json", true, false)
                 .Build();
 
 }
