@@ -8,7 +8,7 @@ The goal of this game is to leverage the powerful capabilities of AI to create a
 - Extract the contents of the package.
 - Obtain a ChatGPT API key from here: https://platform.openai.com/account/api-keys
 - Insert the API key into the appSettings.json file under ChatGpt:ApiKey.
-- Run EndlessRealms.GUI.exe
+- Run EndlessRealms.Gui.exe
 - Enjoy
 ### Build by yourself
 - Download and install .NET 7 SDK (https://dotnet.microsoft.com/en-us/download)
@@ -32,5 +32,5 @@ The goal of this game is to leverage the powerful capabilities of AI to create a
   ```  
 - Obtain a ChatGPT API key from here: https://platform.openai.com/account/api-keys
 - Insert the API key into the appSettings.json file under ChatGpt:ApiKey.
-- Run EndlessRealms.GUI.exe
+- Run EndlessRealms.Gui.exe
 - Enjoy
