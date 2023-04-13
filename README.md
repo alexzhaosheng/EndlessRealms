@@ -4,7 +4,7 @@ The goal of this game is to leverage the powerful capabilities of AI to create a
 ## Usage
 ### Using the Released Package
 - Download and install .NET 7 (https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
-- Download the release package corresponding to your platform
+- Download the release package corresponding to your platform (https://github.com/alexzhaosheng/EndlessRealms/releases)
 - Extract the contents of the package.
 - Obtain a ChatGPT API key from here: https://platform.openai.com/account/api-keys
 - Insert the API key into the appSettings.json file under ChatGpt:ApiKey.
