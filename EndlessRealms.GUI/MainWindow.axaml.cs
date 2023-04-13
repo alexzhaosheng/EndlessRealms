@@ -64,11 +64,9 @@ public partial class MainWindow : Window
         Task.Run(()=>_serviceProvider.GetService<Game>()!.Start());                
     }
 
-    private async void ClearDataButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-    {
-        await _serviceProvider.GetService<Game>()!.Stop();
+    private void ClearDataButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {        
         _serviceProvider.GetRequiredService<PlayerIoManager.Handler>().NotifyInput(InputType.SystemCommand, "reset_all");
-        
     }
 
     private void SetupIoHandler()

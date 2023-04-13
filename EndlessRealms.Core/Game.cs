@@ -95,8 +95,10 @@ namespace EndlessRealms.Core
                         }
                         return (false, "You can't go that way.");
                     });
-
-                    await _worldService.MoveTo(directionStr!.ToDirection().GetValueOrDefault());
+                    if (!string.IsNullOrWhiteSpace(directionStr))
+                    {
+                        await _worldService.MoveTo(directionStr!.ToDirection().GetValueOrDefault());
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -164,6 +166,7 @@ namespace EndlessRealms.Core
 
         private async Task Reset()
         {
+            await this.Stop();
             await _persistedDataAccessor.ClearAllGameData();
             await _worldService.Reset();
             _gameContext.CurrentPlayerInfo = null!;
