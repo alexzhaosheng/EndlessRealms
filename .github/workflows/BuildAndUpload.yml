@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [windows-latest, ubuntu-latest, macos-latest, macos-arm64-latest]
         include:
           - os: windows-latest
             platform: Windows
@@ -21,6 +21,8 @@ jobs:
             platform: Linux
           - os: macos-latest
             platform: macOS
+          - os: macos-arm64-latest
+            platform: macOS-arm64
 
     steps:
     - name: Checkout repository
@@ -44,7 +46,7 @@ jobs:
         echo "::set-output name=version_with_build_number::$versionWithBuildNumber"
 
     - name: Build and publish
-      run: dotnet publish EndlessRealms.Gui/EndlessRealms.Gui.csproj -c Release -o publish --no-self-contained --runtime ${{ matrix.os == 'windows-latest' && 'win-x64' || matrix.os == 'ubuntu-latest' && 'linux-x64' || 'osx-x64' }}
+       run: dotnet publish EndlessRealms.Gui/EndlessRealms.Gui.csproj -c Release -o publish --no-self-contained --runtime ${{ matrix.os == 'windows-latest' && 'win-x64' || matrix.os == 'ubuntu-latest' && 'linux-x64' || matrix.os == 'macos-latest' && 'osx-x64' || matrix.os == 'macos-arm64-latest' && 'osx-arm64' }}
 
     - name: Zip publish folder
       run: |

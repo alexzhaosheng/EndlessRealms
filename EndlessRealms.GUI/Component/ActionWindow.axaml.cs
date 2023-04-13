@@ -61,7 +61,7 @@ public partial class TalkWindow : Window
 
     private async Task DoInput()
     {
-        var text = this.inputBox.Text.Trim();
+        var text = this.inputBox.Text?.Trim();
         if (string.IsNullOrEmpty(text) || text == "!")
         {
             return;
