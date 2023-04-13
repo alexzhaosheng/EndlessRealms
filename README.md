@@ -10,7 +10,7 @@ The goal of this game is to leverage the powerful capabilities of AI to create a
 - Insert the API key into the appSettings.json file under ChatGpt:ApiKey.
 - Run EndlessRealms.GUI.exe
 - Enjoy
-### Compile by your self
+### Build by yourself
 - Download and install .NET 7 SDK (https://dotnet.microsoft.com/en-us/download)
 - Download and extract the source code or git clone
 - Run dotnet publish to build and publish.
