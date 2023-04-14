@@ -26,7 +26,7 @@ The goal of this game is to leverage the powerful capabilities of AI to create a
   ```
   dotnet publish EndlessRealms.GUI/EndlessRealms.Gui.csproj -c Release -o publish --no-self-contained --runtime osx-x64
   ```  
-  * MacOS X86
+  * MacOS ARM64
   ```
   dotnet publish EndlessRealms.GUI/EndlessRealms.Gui.csproj -c Release -o publish --no-self-contained --runtime osx-arm64
   ```  
