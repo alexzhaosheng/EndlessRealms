@@ -63,29 +63,58 @@ public class UiModel: ReactiveObject
         }
     }
 
-    private string _worldMessage = null!;
-    public string WorldMessage
-    { 
-        get => _worldMessage; 
-        set => this.RaiseAndSetIfChanged(ref _worldMessage, value);
-    }
-
-    public Queue<string> _history  = new Queue<string>();
+    private Queue<string> _interactiveHistory  = new Queue<string>();
     private void RecordHistoryInteractiveMessage()
     {
         if(!string.IsNullOrWhiteSpace(_interactiveMessage))
         {
-            _history.Enqueue(_interactiveMessage);
-            if(_history.Count > 5)
+            _interactiveHistory.Enqueue(_interactiveMessage);
+            if(_interactiveHistory.Count > 5)
             {
-                _history.Dequeue();
+                _interactiveHistory.Dequeue();
             }
-            HistoryInteractiveMessage = string.Join('\n', _history);
+            HistoryInteractiveMessage = string.Join('\n', _interactiveHistory);
         }
     }
 
+    private Queue<string> _worldHistory = new Queue<string>();
+    private void RecordWorldMessage()
+    {
+        if (!string.IsNullOrWhiteSpace(_worldMessage))
+        {
+            _worldHistory.Enqueue(_worldMessage);
+            if (_worldHistory.Count > 5)
+            {
+                _worldHistory.Dequeue();
+            }
+            HistoryWorldMessage = string.Join('\n', _worldHistory);
+        }
+    }
+
+    private string _worldMessage = null!;
+    public string WorldMessage
+    {
+        get => _worldMessage;
+       
+        set 
+        {
+            RecordWorldMessage();
+            this.RaiseAndSetIfChanged(ref _worldMessage, value);
+        }
+    }
+
+    private string _historyWorldMessage = null!;
+    public string HistoryWorldMessage
+    {
+        get => _historyWorldMessage;
+        set => this.RaiseAndSetIfChanged(ref _historyWorldMessage, value);
+    }
+
+
     private string _currentSystemStatus = null!;
     public string? CurrentSystemStatus { get => _currentSystemStatus; set => this.RaiseAndSetIfChanged(ref _currentSystemStatus!, value); }
+
+
 }
 
 

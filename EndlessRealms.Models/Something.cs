@@ -9,12 +9,15 @@ public class Something: IActionTarget
 {
     public string Id { get; set; }
     public string Name { get; set; } = null!;
+    public TargetType Type => TargetType.Thing;
     public string Description { get; set; } = null!;
     public bool IsIanimate { get; set; }
 
     public int Number { get; set; }
 
     int IActionTarget.FriendnessLevel => Const.NeutralFriendnessLevel;
+
+    public TargetStatus Status { get; set; } = TargetStatus.Normal;
 
     public Something() 
     {

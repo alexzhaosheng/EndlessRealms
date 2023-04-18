@@ -22,8 +22,8 @@ public partial class TalkWindow : Window
     public TalkWindow()
     {
         InitializeComponent();
-        
-        this.inputBox.KeyUp += InputBox_KeyUp;                  
+
+        this.inputBox.KeyUp += InputBox_KeyUp;
     }
 
     protected override void OnOpened(EventArgs e)
@@ -80,7 +80,7 @@ public partial class TalkWindow : Window
         {
             response = await _actionSession.Perform(text.Substring(1));
         }
-        
+
         AddAnswer(response);
     }
 
@@ -109,9 +109,9 @@ public partial class TalkWindow : Window
 
     private void AddAnswer(string answer)
     {
-        chatContent.Children.Add(new TextBlock() 
+        chatContent.Children.Add(new TextBlock()
         {
-            Text = ActionTarget.Name,            
+            Text = ActionTarget.Name,
             Classes = new Classes("Responder")
         });
         chatContent.Children.Add(new TextBlock()
@@ -138,19 +138,11 @@ public partial class TalkWindow : Window
             Text = question,
             Classes = new Classes("Question")
         });
-        
+
 
         if (this.chatContent.Children.Count > 0)
         {
             this.chatContent.Children.Last().BringIntoView();
-        }
-    }
-
-    private async Task ProcessActionRespond(ActionRespond respond, CharacterInfo? charInfo, Something? thing)
-    {
-        foreach (var ah in ServiceProvider.GetServices<IActionRespondHandler>())
-        {
-            await ah.ProcessRespond(respond, charInfo, thing);
         }
     }
 }

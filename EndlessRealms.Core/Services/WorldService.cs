@@ -2,6 +2,7 @@
 using EndlessRealms.Core.Utility;
 using EndlessRealms.Core.Utility.Extensions;
 using EndlessRealms.Models;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ using System.Runtime;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace EndlessRealms.Core.Services
 {
@@ -23,8 +25,9 @@ namespace EndlessRealms.Core.Services
         private readonly ILogService _logService;
         private readonly SystemStatusManager _statusManager;
         private readonly GameContext _gameContext;
+        private readonly IServiceProvider _serviceProvider;
 
-        public WorldService(ChatGPTService gptService, IPersistedDataProvider statusLoader, PlayerIoManager playIoService, IRenderService renderService, ILogService logService, SystemStatusManager statusManager, GameContext gameContext)
+        public WorldService(ChatGPTService gptService, IPersistedDataProvider statusLoader, PlayerIoManager playIoService, IRenderService renderService, ILogService logService, SystemStatusManager statusManager, GameContext gameContext, IServiceProvider serviceProvider)
         {
             _gptService = gptService;
             _persistedDataAccessor = statusLoader;
@@ -33,6 +36,7 @@ namespace EndlessRealms.Core.Services
             _logService = logService;
             _statusManager = statusManager;
             _gameContext = gameContext;
+            _serviceProvider = serviceProvider;
         }
 
 
@@ -213,8 +217,18 @@ namespace EndlessRealms.Core.Services
                 await CreateScene(CurrentWorld!, CurrentRegion!, (Current!, direction));
             }
 
-            Current = CurrentWorld!.Scenes.First(s => s.Id == Current!.ConnectedScenes[direction]);
+            var target = CurrentWorld!.Scenes.First(s => s.Id == Current!.ConnectedScenes[direction]);
+            var from = Current;
+            Current = target;
+
             _playIoMgr.OutputMessage(OutputType.WorldMessage, $"Moved to {direction}");
+
+            foreach(var srv in _serviceProvider.GetServices<ISceneChangedEvent>())
+            {
+                await srv.NotifySceneChanged(from, target);
+            }
+
+            SaveChangedWorlds();
         }
 
         internal Task Reset()
@@ -223,31 +237,46 @@ namespace EndlessRealms.Core.Services
             CurrentWorld = null;
             _worlds.Clear();
             return Task.CompletedTask;
+        }     
+
+
+        internal void Remove(IActionTarget target)
+        {
+            if(target.Type == TargetType.Charactor)
+            {
+                Current!.Characters.Remove((CharacterInfo)target);                
+            }
+            else
+            {
+                ((Something)target).Number--;
+                Current!.Things.RemoveAll(t => t.Number <= 0);                
+            }
+            NotifyWorldChanged(CurrentWorld!);
         }
 
 
-        public void ReduceThing(string target)
+        private HashSet<World> _changedWorlds = new HashSet<World>();        
+        public void NotifyWorldChanged(World world)
         {
-            var t = Current!.Things?.FirstOrDefault(t => t.Name == target);
-            if (t != null)
+            if (!_changedWorlds.Contains(world))
             {
-                t.Number--;
-                if (t.Number <= 0)
-                {
-                    Current?.Things?.Remove(t);
-                }
+                _changedWorlds.Add(world);
             }
         }
-       
 
-        public void Remove(CharacterInfo charInfo)
+        public async void SaveChangedWorlds()
         {
-            this.Current!.Characters?.Remove(charInfo);
+            while(_changedWorlds.Count > 0)
+            {
+                var w = _changedWorlds.First();
+                await _persistedDataAccessor.SaveWorld(w);
+                _changedWorlds.Remove(w);
+            }
         }
 
-        public async Task SaveCurrentWorld()
+        public void NotifyCurrentWorldChanged()
         {
-            await _persistedDataAccessor.SaveWorld(CurrentWorld!);
+            NotifyWorldChanged(CurrentWorld!);
         }
     }
 }

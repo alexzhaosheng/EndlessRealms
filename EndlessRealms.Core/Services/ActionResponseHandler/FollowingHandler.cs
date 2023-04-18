@@ -8,22 +8,30 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace EndlessRealms.Core.Services.ActionResponseHandler;
+
 [Service(typeof(IActionRespondHandler))]
-public class DisappearHandler : IActionRespondHandler
+public class FollowingHandler : IActionRespondHandler
 {
     private readonly WorldService _worldService;
 
-    public DisappearHandler(WorldService worldService)
+    public FollowingHandler(WorldService worldService)
     {
         _worldService = worldService;
     }
-    
+
     public Task ProcessRespond(ActionRespond actionRespond, IActionTarget target)
     {
-        if (!string.IsNullOrEmpty(actionRespond.NewStatus) && actionRespond.NewStatus.Equals("Disappear", StringComparison.OrdinalIgnoreCase))
+        if(actionRespond.NewStatus == "Follow")
         {
-            _worldService.Remove(target);
+            target.Status = TargetStatus.Following;
+            _worldService.NotifyCurrentWorldChanged();
         }
+        else if(actionRespond.NewStatus == "StopFollowing")
+        {
+            target.Status = TargetStatus.Normal;
+            _worldService.NotifyCurrentWorldChanged();
+        }
+
         return Task.CompletedTask;
     }
 }

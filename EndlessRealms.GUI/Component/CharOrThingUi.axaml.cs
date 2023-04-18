@@ -40,19 +40,21 @@ public partial class CharOrThingUi : UserControl
     private void UpdateUi()
     {
         if(this.Thing != null) 
-        {
-            this.numberText.Text = this.Thing.Number.ToString();
-            this.descriptionText.Text = $"{this.Thing.Name}";
-            this.descriptionText.Foreground = Brushes.LightGreen;            
+        {            
+            this.nameText.Text = $"{this.Thing.Name}";
+            this.nameText.Foreground = Brushes.LightGreen;
+
+            this.descriptionText.Text = this.Thing.Description;
         }
         else
-        {
-            this.numberText.Text = "";
-            this.descriptionText.Foreground = Brushes.Magenta;
-            this.descriptionText.Text = this.Character!.FullName + (
+        {            
+            this.nameText.Foreground = Brushes.Magenta;
+            this.nameText.Text = this.Character!.FullName + (
                 string.IsNullOrWhiteSpace(this.Character!.Title) 
                 ? "" 
-                : $"({this.Character.Title})"); 
+                : $"({this.Character.Title})");
+
+            this.descriptionText.Text = this.Character.Appearance;
         }
     }
 
