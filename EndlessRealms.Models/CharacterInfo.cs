@@ -6,12 +6,6 @@ using System.Threading.Tasks;
 
 namespace EndlessRealms.Models;
 
-public enum CharacterStatus
-{
-    Normal,
-    Attack,
-    Follow
-}
 public class CharacterInfo: IActionTarget
 {
     public string Id { get; set; }
@@ -23,12 +17,14 @@ public class CharacterInfo: IActionTarget
     public string Age { get; set; } = null!;
     public string Appearance { get; set; } = null!;
     public string Personality { get; set; } = null!;
-    public CharacterStatus Status { get; set; } = CharacterStatus.Normal;
+    public TargetStatus Status { get; set; } = TargetStatus.Normal;
     public int FriendnessLevel { get; set; } = 5;
 
     string IActionTarget.Name => FullName;
 
     string IActionTarget.Description => Appearance;
+
+    public TargetType Type => TargetType.Charactor;
 
     public CharacterInfo()
     {

@@ -46,11 +46,11 @@ public static class DirectionExtension
         }
         else if (d == "n" || d == "north")
         {
-            return Direction.West;
+            return Direction.North;
         }
         else if (d == "s" || d == "south")
         {
-            return Direction.West;
+            return Direction.South;
         }
         return null;
     }

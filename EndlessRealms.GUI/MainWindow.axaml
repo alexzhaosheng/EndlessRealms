@@ -94,10 +94,15 @@
             </Border>
 
             <Border Grid.Row="1">
-              <TextBlock Margin="5" 
-                       Foreground="LightGreen" Background="Black"
-                         Text="{Binding WorldMessage}"
-                      ></TextBlock>
+              <ScrollViewer>
+                <StackPanel>
+                  <TextBlock Margin="5 5 5 2"
+                           Foreground="LightGreen" Background="Black"
+                             Text="{Binding WorldMessage}"
+                        ></TextBlock>
+                  <TextBlock Padding="5 2 5 1" Text="{Binding HistoryWorldMessage}" VerticalAlignment="Bottom"  Foreground="Gray"></TextBlock>
+                </StackPanel>
+              </ScrollViewer>
             </Border>
             
             <Border Grid.Row="2">

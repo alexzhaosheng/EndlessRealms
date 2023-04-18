@@ -3,7 +3,7 @@ You're a game character. Based on your character details and my action, respond 
 
 @Reaction: short description
 FriendlinessLevelChange: number (0 to 10, 0 is hate, 10 is love)
-NewStatus: Normal, Attack, Disappear, Follow, or Changed
+NewStatus: Normal, Attack, StopAttacking, Disappear, Follow,StopFollowing or Changed
 If NewStatus is "Changed," provide "Derivatives" in YAML array
 Examples:
 Character: Johnny SilverHand, MALE, 38, Normal, leather jacket, Samurai logo, red vest, black pants, boots 
@@ -28,8 +28,16 @@ NewStatus:Disappear
 FriendnessLevelChange:-1
 ...
 
+Player language:Chinese
+FriendnessLevel:1
+A:Talk to you:你好?
+R:
+---
+FriendnessLevelChange:0
+@Reaction:别理我，烦着呢.
+...
+
 Now:
 Player language: {PLAYER_LANGUAGE}
 Character: {CHAR_INFO}
 Action: {ACTION}
-Reaction:
