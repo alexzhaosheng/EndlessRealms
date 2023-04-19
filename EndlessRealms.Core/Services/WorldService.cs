@@ -48,7 +48,7 @@ namespace EndlessRealms.Core.Services
 
         public async Task Initialize()
         {
-            _worlds = _persistedDataAccessor.LoadWorlds().ToList();
+            _worlds = _persistedDataAccessor.LoadWorlds().ToList();            
 
             if (_worlds.Count == 0)
             {
@@ -56,13 +56,15 @@ namespace EndlessRealms.Core.Services
                 await CreateAWorld();
             }
 
-            CurrentWorld = _worlds.First();
+            CurrentWorld = _worlds.FirstOrDefault(t => t.Id == _gameContext.CurrentPlayerInfo.CurrentWorldId)
+                ?? _worlds.First();
             if (CurrentWorld.Scenes.Count == 0)
             {
                 _logService.Logger.Information("No scene is detected. Create new scene automatically");
                 await CreateScene(CurrentWorld, CurrentWorld.Regions.First(), null);
             }
-            Current = CurrentWorld.Scenes.First();
+            Current = CurrentWorld.Scenes.FirstOrDefault(t=>t.Id == _gameContext.CurrentPlayerInfo.CurrentSceneId)
+                ?? CurrentWorld.Scenes.First();
         }
 
 
@@ -227,6 +229,10 @@ namespace EndlessRealms.Core.Services
             {
                 await srv.NotifySceneChanged(from, target);
             }
+
+            _gameContext.CurrentPlayerInfo.CurrentSceneId = Current.Id;
+            _gameContext.CurrentPlayerInfo.CurrentWorldId = CurrentWorld.Id;
+            await _gameContext.SavePlayerInfo();
 
             SaveChangedWorlds();
         }
