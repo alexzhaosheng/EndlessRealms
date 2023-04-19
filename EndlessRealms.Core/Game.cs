@@ -52,12 +52,7 @@ namespace EndlessRealms.Core
 
                 _ = ListenToSystemCommand();
 
-                _gameContext.CurrentPlayerInfo = (await _persistedDataAccessor.LoadPlayerInfo())!;
-                if(_gameContext.CurrentPlayerInfo == null)
-                {
-                    await InitializePlayerInfo();
-                }
-
+                await _gameContext.Initialize();
                 await _worldService.Initialize();
                 
                 await GameCircle();
@@ -146,30 +141,12 @@ namespace EndlessRealms.Core
             }
         }
 
-        private async Task InitializePlayerInfo()
-        {
-            _gameContext.CurrentPlayerInfo = new PlayerInfo();
-            string? greeting;
-            do 
-            {
-                greeting = await _playerIoMgr.Input(
-                    InputType.GeneralInput,
-                    "Hello, please say a sentence in your language to me, and from then on, I will generate the world in your language. Please don't make it too short to avoid me mistaking your language",
-                    (value) => (!string.IsNullOrEmpty(value), null));
-            }
-            while(greeting == null);
-
-            var (s, _) = await _gptService.Call<string>(t => t.LANGUAGE_ANALYSIS, ("PROMPT", greeting!));
-            _gameContext.CurrentPlayerInfo.Language = s;
-            await _persistedDataAccessor.SavePlayerInfo(_gameContext.CurrentPlayerInfo);
-        }
-
         private async Task Reset()
         {
             await this.Stop();
             await _persistedDataAccessor.ClearAllGameData();
             await _worldService.Reset();
-            _gameContext.CurrentPlayerInfo = null!;
+            _gameContext.ResetData();
             await this.Start();
         }
     }
