@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{A586
 		Predefined\Actions\Talk.actionprompt.txt = Predefined\Actions\Talk.actionprompt.txt
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EndlessRealms.ElectronUi", "EndlessRealms.ElectronUi\EndlessRealms.ElectronUi.csproj", "{45C3BA2D-6DFA-45FA-9F7C-FBC2796D7AD8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{747F868A-CDDB-40E8-A628-CA2D64A028EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{747F868A-CDDB-40E8-A628-CA2D64A028EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{747F868A-CDDB-40E8-A628-CA2D64A028EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45C3BA2D-6DFA-45FA-9F7C-FBC2796D7AD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45C3BA2D-6DFA-45FA-9F7C-FBC2796D7AD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45C3BA2D-6DFA-45FA-9F7C-FBC2796D7AD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45C3BA2D-6DFA-45FA-9F7C-FBC2796D7AD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

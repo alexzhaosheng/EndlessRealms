@@ -8,8 +8,8 @@ namespace EndlessRealms.Models;
 public class PlayerInfo
 {
     public string Language { get; set; } = null!;
-    public string CurrentWorldId { get; set; }
-    public string CurrentSceneId { get; set; }
+    public string CurrentWorldId { get; set; } = null!;
+    public string CurrentSceneId { get; set; } = null!;
 
     public int Hp { get; set; }
 }

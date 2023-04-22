@@ -11,7 +11,7 @@ namespace EndlessRealms.Core.Utility
 {
     public static class ServiceLoader
     {
-        public static void LoadServices(this ServiceCollection services, Assembly asb)
+        public static void LoadServices(this IServiceCollection services, Assembly asb)
         {
             foreach(var type in asb.GetTypes())
             {

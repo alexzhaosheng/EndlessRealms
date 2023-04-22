@@ -1,0 +1,30 @@
+﻿@inherits LayoutComponentBase
+@using EndlessRealms.ElectronUi.Pages;
+
+<RadzenLayout Class="rz-background-color-base-900">
+    <RadzenHeader>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+            <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" />
+            <RadzenLabel Text="Endless Realms" />
+        </RadzenStack>
+    </RadzenHeader>    
+    <RadzenBody>
+        <RadzenTabs TabPosition="TabPosition.Left" class="full-height-tab">
+            <Tabs>
+                <RadzenTabsItem Icon="flight_takeoff" Text="@(sidebar1Expanded?"Game":"")">
+                   <Game></Game>                
+                </RadzenTabsItem>
+
+                 <RadzenTabsItem Icon="bug_report" Text="@(sidebar1Expanded?"Log":"")">
+                    <Log></Log>
+                </RadzenTabsItem>
+            </Tabs>
+    </RadzenTabs>
+
+    </RadzenBody>   
+</RadzenLayout>
+<RadzenDialog></RadzenDialog>
+
+@code {
+    bool sidebar1Expanded = true;
+}

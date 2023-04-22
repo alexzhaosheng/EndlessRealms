@@ -44,6 +44,9 @@ namespace EndlessRealms.Core
 
         public event EventHandler? QuitGame;
         private bool _gameIsRuning;
+
+        public bool GameIsRuning { get => _gameIsRuning;}
+
         public async Task Start()
         {
             try
