@@ -14,7 +14,6 @@ using System.Diagnostics;
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration
-    .AddJsonFile("./appSettings.json", false, false)
     .AddJsonFile("./appSettings.dev.json", true, false)
     .Build();
 
@@ -34,7 +33,7 @@ builder.Services.AddScoped<ContextMenuService>();
 
 
 
-builder.Services.Configure<ChatGptApiSetting>("ChatGpt", config);
+builder.Services.Configure<ChatGptApiSetting>(config.GetSection("ChatGpt"));
 
 builder.Services.LoadServices(EndlessRealms.Core.TheAssembly.Assembly);
 builder.Services.LoadServices(EndlessRealms.LocalEnv.TheAssembly.Assembly);

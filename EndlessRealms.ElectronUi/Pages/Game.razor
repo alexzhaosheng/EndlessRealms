@@ -11,9 +11,30 @@
         <RadzenStack>   
             @if (gameModel.Scene != null)
             {
-                <RadzenCard Class="rz-background-color-success-lighter rz-color-white rz-mx-12">
+                <RadzenCard Class="rz-background-color-success-lighter rz-color-white rz-mx-12" Gap="0.5rem">
                     <RadzenText TextStyle="TextStyle.H6" Class="rz-color-series-4">@gameModel.World!.Name | @gameModel.Scene!.Name  </RadzenText>
-                    <RadzenText TextStyle="TextStyle.Subtitle1">@gameModel.Scene.Description</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Subtitle1" Text="@gameModel.Scene.Description"></RadzenText>
+                </RadzenCard>
+               
+                <RadzenCard Gap="1rem" Class="rz-mx-12">
+                    <RadzenStack Orientation="Orientation.Horizontal" Wrap="FlexWrap.Wrap">
+                        @foreach(var d in gameModel.Scene.ConnectedScenes)
+                        {
+                        <DirectionUi Direction="@d.Key" ConnectedSceneId="@d.Value"></DirectionUi>
+                        }
+                    </RadzenStack>
+                </RadzenCard>
+                <RadzenCard Gap="1rem" Class="rz-mx-12">
+                    <RadzenStack Orientation="Orientation.Horizontal" Wrap="FlexWrap.Wrap" JustifyContent="JustifyContent.Start">
+                        @foreach(var d in gameModel.Scene.Characters)
+                        {
+                            <CharactorUi Charactor=@d></CharactorUi>
+                        }
+                        @foreach(var d in gameModel.Scene.Things)
+                        {
+                            <ThingUi Something="@d"></ThingUi>
+                        }
+                    </RadzenStack>
                 </RadzenCard>
             }          
         </RadzenStack>        
@@ -43,6 +64,7 @@
     {
         if (firstRender)
         {
+            gameModel.PropertyChanged += (s, e) => this.InvokeAsync(()=> this.StateHasChanged());
             StartTheGame();
         }
     }
@@ -70,9 +92,9 @@
                 {
                     await ShowLoadingInfo(statusManager.CurrentStatusMessage);
                 }
-                else if(_isLoadingMessageVisible)
+                else
                 {
-                    dialogService.Close();
+                    CloseCurrentLoadingMessage();
                 }
             });
         };
@@ -120,14 +142,31 @@
         ioHandler.NotifyInput(InputType.GeneralInput, GeneralInputValue!);        
     }
 
+  
     private bool _isLoadingMessageVisible;
+    private string? _currentLoadingMessage;
     private async Task ShowLoadingInfo(string message)
     {
+        _currentLoadingMessage = message;
+        if (_isLoadingMessageVisible)
+        {
+            return;
+        }
         _isLoadingMessageVisible = true;
         await dialogService.OpenAsync("", (ds) =>
     @<RadzenStack>
-        <RadzenText>@message</RadzenText>
-    </RadzenStack>,
+        <RadzenText>@_currentLoadingMessage</RadzenText>
+        </RadzenStack>
+    ,
     new DialogOptions() { ShowTitle = false, Style = "min-height:auto;min-width:auto;width:auto", CloseDialogOnEsc = false });
+    }
+
+    private void CloseCurrentLoadingMessage()
+    {
+        if (_isLoadingMessageVisible)
+        {
+            _isLoadingMessageVisible = false;
+            dialogService.Close();
+        }
     }
 }

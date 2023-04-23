@@ -1,0 +1,17 @@
+@using EndlessRealms.Models;
+<RadzenCard Class="rz-my-3 .rz-border-radius-3 rz-color-white" Style="width:250px">
+    <RadzenStack Gap="0rem">
+        <RadzenButton ButtonStyle="ButtonStyle.Primary">
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="0.4rem">
+                <RadzenIcon Icon="account_circle"></RadzenIcon>
+                <RadzenText><b>@Charactor?.FullName</b></RadzenText>
+            </RadzenStack>
+        </RadzenButton>
+
+        <RadzenText Class="rz-text-wrap" TextStyle="TextStyle.Overline">@Charactor?.Appearance</RadzenText>
+    </RadzenStack>
+</RadzenCard>
+@code {
+    [Parameter]
+    public CharacterInfo? Charactor{ get; set; }
+}

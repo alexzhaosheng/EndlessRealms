@@ -3,3 +3,6 @@
 /.vs/EndlessRealms
 /.vs/ProjectEvaluation
 /EndlessRealms.GUI/appSettings.dev.json
+/output
+/EndlessRealms.ElectronUi/Status/Worlds
+/EndlessRealms.ElectronUi/Status
