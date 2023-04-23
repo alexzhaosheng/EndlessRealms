@@ -1,0 +1,32 @@
+﻿@using Radzen;
+@using Radzen.Blazor.Rendering;
+@using EndlessRealms.Core.Services;
+@using EndlessRealms.Models;
+
+@inject IPersistedDataProvider persistedDataProvider;
+
+<RadzenStack Style="height:70vh;width:50vh;">
+    <RadzenColumn Size="9">
+        <RadzenStack>
+            @foreach(var item in ActionHistory!.History)
+            {
+                <RadzenText></RadzenText>
+            }
+        </RadzenStack>
+    </RadzenColumn>
+    <RadzenColumn Size="3">
+
+    </RadzenColumn>
+</RadzenStack>
+
+@code {
+    [Parameter]
+    public IActionTarget? ActionTarget{ get; set; }
+
+    private ActionHistory? ActionHistory{ get; set; }
+
+    override protected async Task OnInitializedAsync()
+    {
+        ActionHistory = await persistedDataProvider.GetActionHistory(ActionTarget!.Id);
+    }
+}
