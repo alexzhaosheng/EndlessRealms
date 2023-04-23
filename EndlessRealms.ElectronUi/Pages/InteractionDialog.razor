@@ -1,0 +1,55 @@
+﻿@using Radzen;
+@using Radzen.Blazor.Rendering;
+@using EndlessRealms.Core.Services;
+@using EndlessRealms.Models;
+
+@using Microsoft.JSInterop
+@inject IPersistedDataProvider persistedDataProvider;
+@inject IJSRuntime JS
+
+<RadzenStack Style="height:70vh;" Class="rz-color-white">
+    <RadzenStack Style="height:calc(100% - 50px);">
+        <RadzenRow Style="height:100%">
+            <RadzenColumn Size="9">
+                <div @ref=ContentPanelRef style="height:100%" class="rz-border-primary-lighter">
+                    <RadzenStack Gap="0.5rem">
+                        @foreach(var item in ActionHistory!.History)
+                        {
+                            <RadzenText Class="rz-border-radius-1 rz-background-color-info-dark rz-text-wrap" Style="margin-right:100px">@item.Action</RadzenText>
+                            <RadzenText Class="rz-border-radius-1 rz-background-color-success-dark rz-text-wrap" Style="margin-left:100px">@item.Response</RadzenText>
+                        }
+                    </RadzenStack>
+                </div>
+            </RadzenColumn>
+            <RadzenColumn Size="3">
+                <RadzenStack Gap="0.2rem">
+                    <RadzenText TextStyle="TextStyle.H6"><b>@ActionTarget?.Name</b></RadzenText>
+                    <RadzenText Style="rz-text-wrap"><b>@ActionTarget?.Description</b></RadzenText>
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenStack>
+
+    <RadzenStack>
+        <RadzenTextBox></RadzenTextBox>
+    </RadzenStack>
+</RadzenStack>
+
+@code {
+    [Parameter]
+    public IActionTarget? ActionTarget{ get; set; }
+
+    private ActionHistory? ActionHistory{ get; set; }
+
+    private ElementReference ContentPanelRef;
+
+    override protected async Task OnInitializedAsync()
+    {
+        ActionHistory = await persistedDataProvider.GetActionHistory(ActionTarget!.Id);
+    }
+
+    override protected void OnAfterRender(bool firstRender)
+    {
+        JS.InvokeVoidAsync("scrollToEnd", new object[] { ContentPanelRef });
+    }
+}
