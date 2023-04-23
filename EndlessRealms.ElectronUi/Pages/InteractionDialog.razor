@@ -10,18 +10,18 @@
 <RadzenStack Style="height:70vh;" Class="rz-color-white">
     <RadzenStack Style="height:calc(100% - 50px);">
         <RadzenRow Style="height:100%">
-            <RadzenColumn Size="9">
+    <RadzenColumn Size="9">
                 <div @ref=ContentPanelRef style="height:100%" class="rz-border-primary-lighter">
                     <RadzenStack Gap="0.5rem">
-                        @foreach(var item in ActionHistory!.History)
-                        {
+            @foreach(var item in ActionHistory!.History)
+            {
                             <RadzenText Class="rz-border-radius-1 rz-background-color-info-dark rz-text-wrap" Style="margin-right:100px">@item.Action</RadzenText>
                             <RadzenText Class="rz-border-radius-1 rz-background-color-success-dark rz-text-wrap" Style="margin-left:100px">@item.Response</RadzenText>
-                        }
-                    </RadzenStack>
+            }
+        </RadzenStack>
                 </div>
-            </RadzenColumn>
-            <RadzenColumn Size="3">
+    </RadzenColumn>
+    <RadzenColumn Size="3">
                 <RadzenStack Gap="0.2rem">
                     <RadzenText TextStyle="TextStyle.H6"><b>@ActionTarget?.Name</b></RadzenText>
                     <RadzenText Style="rz-text-wrap"><b>@ActionTarget?.Description</b></RadzenText>
