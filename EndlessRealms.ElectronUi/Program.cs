@@ -42,7 +42,7 @@ builder.Services.LoadServices(EndlessRealms.ElectronUi.TheAssembly.Assembly);
 var logModel = new LogModel();
 var logger = new LoggerConfiguration()
            .ReadFrom.Configuration(config)
-           .WriteTo.UiLogSink(logModel)
+           .WriteTo.UiLogSink(logModel)           
            .CreateLogger();
 
 builder.Services.AddSingleton(logModel);

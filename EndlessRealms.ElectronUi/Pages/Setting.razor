@@ -1,0 +1,15 @@
+﻿@using EndlessRealms.Core.Services;
+@inject DialogService dialogService;
+@inject PlayerIoManager.Handler ioHandler;
+<RadzenButton ButtonStyle="ButtonStyle.Danger" Click=@OnClicked>Reset Data</RadzenButton>
+
+@code {
+    private async void OnClicked()
+    {
+        var dr = await dialogService.Confirm("This will clear all of the game data/player data, are you sure to continue?");
+        if (dr.GetValueOrDefault())
+        {
+            ioHandler.NotifyInput(InputType.SystemCommand, "reset_all");
+        }
+    }
+}

@@ -24,6 +24,8 @@ public class UiLogSink : ILogEventSink
     {
         var message = logEvent.RenderMessage(_formatProvider);
         _logModel.Log = message + "\n==================================================\n\n" + _logModel.Log;
+        Console.WriteLine(message);
+        Console.WriteLine();
     }
 }
 

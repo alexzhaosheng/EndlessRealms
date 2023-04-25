@@ -40,15 +40,14 @@ public class ActionSession
         ActionHistory = await _persistedDataProvider.GetActionHistory(_actionTarget.Id);
     }
 
-    public Task<string> Talk(string text)
-    {
-        return Perform($"Talk to you:{text}");
-    }
 
     public async Task<string> Perform(string action)
     {        
         var session = string.Join("\n", ActionHistory.History.Select(t => $"A:{t.Action}\nR:{t.Response}"));
-        session += $"\nFriendnessLevel:{_actionTarget.FriendnessLevel}\nA:{action}\nR:";
+        var actionReq = action.StartsWith("!")
+            ? $"Perform Action:  {action.Substring(1)}"
+            : $"Talk to you: {action}";
+        session += $"\nFriendnessLevel:{_actionTarget.FriendnessLevel}\nA:{actionReq}\nR:";
         var charInfo = _actionTarget.GetFullInfo();
         var (response, origMsg) = await _chatGPTService.Call<ActionRespond>(
                 t => t.PERFORM_ACTION_ON,

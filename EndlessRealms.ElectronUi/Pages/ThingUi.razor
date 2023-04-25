@@ -11,7 +11,7 @@
             </RadzenStack>
         </RadzenButton>
 
-        <RadzenText Class="rz-text-wrap">@Something?.Description</RadzenText>
+        <RadzenText Style="font-size:small" Class="rz-text-wrap">@Something?.Description</RadzenText>
     </RadzenStack>
 </RadzenCard>
 @code {
@@ -23,7 +23,7 @@
         await dialogService.OpenAsync<InteractionDialog>(
             "Interaction",
             new Dictionary<string, object> { { "ActionTarget", Something! } },
-            new DialogOptions() { ShowClose = true, ShowTitle = true, Width = "50vw" }
+            new DialogOptions() { ShowClose = true, ShowTitle = true, Width = "40vw" }
         );
     }
 }
