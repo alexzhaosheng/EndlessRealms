@@ -1,4 +1,4 @@
-namespace EndlessRealms.ElectronUi.Data;
+namespace EndlessRealms.WebUi.Data;
 
 public class WeatherForecastService
 {

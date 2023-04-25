@@ -1,9 +1,9 @@
 ﻿using EndlessRealms.Core.Services;
 using EndlessRealms.Core.Utility;
-using EndlessRealms.ElectronUi.Pages;
+using EndlessRealms.WebUi.Pages;
 using EndlessRealms.Models;
 
-namespace EndlessRealms.ElectronUi.Services;
+namespace EndlessRealms.WebUi.Services;
 
 [Service(typeof(IRenderService))]
 public class RenderService : IRenderService

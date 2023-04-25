@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using EndlessRealms.ElectronUi.Pages;
+using EndlessRealms.WebUi.Pages;
 
-namespace EndlessRealms.ElectronUi.Services;
+namespace EndlessRealms.WebUi.Services;
 public class UiLogSink : ILogEventSink
 {
     private readonly IFormatProvider _formatProvider;

@@ -25,7 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{A586
 		Predefined\Actions\Talk.actionprompt.txt = Predefined\Actions\Talk.actionprompt.txt
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EndlessRealms.ElectronUi", "EndlessRealms.ElectronUi\EndlessRealms.ElectronUi.csproj", "{45C3BA2D-6DFA-45FA-9F7C-FBC2796D7AD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EndlessRealms.WebUi", "EndlessRealms.WebUi\EndlessRealms.WebUi.csproj", "{45C3BA2D-6DFA-45FA-9F7C-FBC2796D7AD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

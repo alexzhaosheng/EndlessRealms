@@ -1,0 +1,73 @@
+﻿@using EndlessRealms.Core.Services;
+@using EndlessRealms.Models;
+
+@inject DialogService dialogService;
+@inject PlayerIoManager.Handler ioHandler;
+@inject IPersistedDataProvider persistedDataProvider;
+@inject Settings settings;
+<RadzenStack Gap="1rem">
+    @if (!SettingsOnly)
+    {
+        <RadzenCard Style="width:400px">
+            <RadzenStack Gap="0.3rem">
+                <RadzenText TextStyle="TextStyle.H6">Game Data</RadzenText>
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Click=@OnResetButtonClicked>Reset Data</RadzenButton>
+                <RadzenText Style="font-size:small" Class="rz-text-wrap">This will clear all of your game and player data.</RadzenText>
+            </RadzenStack>
+        </RadzenCard>
+    }
+
+    <RadzenCard Style="width:400px">
+        <RadzenStack Gap="0.3rem">
+            <RadzenText TextStyle="TextStyle.H6">Settings</RadzenText>
+
+            <RadzenText Class="rz-mt-3">Chat GPT API Key</RadzenText>
+            <RadzenPassword @bind-Value=settings.ChatGptApiKey></RadzenPassword>
+            <RadzenText Style="font-size:small" Class="rz-text-wrap">
+                <p>Obtain a ChatGPT API key from: <a href="https://platform.openai.com/account/api-keys" target="_blank">https://platform.openai.com/account/api-keys</a></p>
+                <p class="rz-color-danger">Do not share the API with the others.</p>
+                </RadzenText>
+
+
+            <RadzenButton Class="rz-mt-10" ButtonStyle="ButtonStyle.Info" Click=@OnSaveSettingsClicked>Save</RadzenButton>
+        </RadzenStack>
+    </RadzenCard>
+</RadzenStack>
+
+
+@code {
+    [Parameter]
+    public bool SettingsOnly { get; set; } = false;
+    [Parameter]
+    public Action? OnSettingSaved { get; set; }
+
+    private async void OnResetButtonClicked()
+    {
+        var dr = await dialogService.Confirm("This will clear all of the game data/player data, are you sure to continue?");
+        if (dr.GetValueOrDefault())
+        {
+            ioHandler.NotifyInput(InputType.SystemCommand, "reset_all");
+        }
+    }
+
+    private async void OnSaveSettingsClicked()
+    {
+        if (string.IsNullOrWhiteSpace(settings.ChatGptApiKey))
+        {
+            await dialogService.Alert("Please input the API key.");
+            return;
+        }
+        await persistedDataProvider.SaveSettings(settings);
+        if(OnSettingSaved != null)
+        {
+            OnSettingSaved?.Invoke();
+        }
+        else
+        {
+            await dialogService.Alert("Saved.");
+        }
+        
+    }
+
+    
+}

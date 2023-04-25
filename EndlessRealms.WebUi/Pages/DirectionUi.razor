@@ -26,8 +26,8 @@
     [Parameter]
     public string? ConnectedSceneId{ get; set; }
 
-    private async void OnClicked()
+    private void OnClicked()
     {
-        ioHandler.NotifyInput(InputType.DirectionInput, Direction.ToString());
+        ioHandler.NotifyInput(InputType.DirectionInput, Direction!.Value.ToString());
     }
 }

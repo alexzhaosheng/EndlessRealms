@@ -171,4 +171,24 @@ public class FilePersistedDataProvider: IPersistedDataProvider
         sw.Write(playerInfo.ToJsonString());
         return Task.CompletedTask;
     }
+
+    public Task<Settings?> LoadSettings()
+    {
+        var file = Path.Combine(GetStatusFolder(), "Settings.json");
+        if (!File.Exists(file))
+        {
+            return Task.FromResult<Settings?>(null);
+        }
+        using var sr = new StreamReader(file);
+        var json = sr.ReadToEnd();
+        return Task.FromResult(json.JsonToObject<Settings>());
+    }
+
+    public Task SaveSettings(Settings settings)
+    {
+        var file = Path.Combine(GetStatusFolder(), "Settings.json");
+        using var sw = new StreamWriter(file);
+        sw.Write(settings.ToJsonString());
+        return Task.CompletedTask;
+    }
 }

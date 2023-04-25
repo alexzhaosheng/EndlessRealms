@@ -1,0 +1,26 @@
+﻿@inherits LayoutComponentBase
+@using EndlessRealms.Models;
+@using EndlessRealms.WebUi.Pages;
+@using EndlessRealms.Core.Services;
+
+@inject NavigationManager navigationManager;
+@inject Settings settings;
+
+<RadzenDialog></RadzenDialog>
+
+@Body
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (navigationManager.ToBaseRelativePath(navigationManager.Uri) == "")
+        {                      
+            if (string.IsNullOrWhiteSpace(settings.ChatGptApiKey))
+            {
+                await Task.Delay(100);  //if navigate immediatly, it will throw an error. 
+                navigationManager.NavigateTo("/initial");
+            }
+        }
+    }
+}

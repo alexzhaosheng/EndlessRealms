@@ -17,7 +17,7 @@ namespace EndlessRealms.Core.Services
     [Service]
     public class ChatGPTService
     {        
-        private readonly ChatGptApiSetting _setting;
+        private readonly Settings _setting;
         private readonly HttpClient _httpClient;
         private readonly ApiCallSetting[] _apiCallSettings;
         private readonly SystemStatusManager _systemStatus;
@@ -25,11 +25,10 @@ namespace EndlessRealms.Core.Services
         private readonly IPersistedDataProvider _persistedDataAccessor;
         private readonly SystemStatusManager _statusManager;
 
-        public ChatGPTService(IOptions<ChatGptApiSetting> setting, IPersistedDataProvider statusLoader, SystemStatusManager systemStatus, ILogService logService, IPersistedDataProvider persistedDataAccessor, SystemStatusManager statusManager)
+        public ChatGPTService(Settings setting, IPersistedDataProvider statusLoader, SystemStatusManager systemStatus, ILogService logService, IPersistedDataProvider persistedDataAccessor, SystemStatusManager statusManager)
         {
-            _setting = setting.Value;
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_setting.ApiKey}");
+            _setting = setting;
+            _httpClient = new HttpClient();            
             _apiCallSettings = statusLoader.LoadApiCallSettings().ToArray();
             _systemStatus = systemStatus;
             _logService = logService;
@@ -105,9 +104,12 @@ namespace EndlessRealms.Core.Services
                 }
                 var dataObj = setting.DataObject.JsonClone();
                 dataObj.prompt = prompt;
-                var requestContent = new StringContent(dataObj.ToJsonString(), Encoding.UTF8, "application/json");
+
+                var reqMessage = new HttpRequestMessage(HttpMethod.Post, setting.Url);
+                reqMessage.Content = new StringContent(dataObj.ToJsonString(), Encoding.UTF8, "application/json");
+                reqMessage.Headers.Add("Authorization", $"Bearer {_setting.ChatGptApiKey}");
                 
-                var response = await _httpClient.PostAsync(setting.Url, requestContent);
+                var response = await _httpClient.SendAsync(reqMessage);
                 
                 if (response.IsSuccessStatusCode)
                 {

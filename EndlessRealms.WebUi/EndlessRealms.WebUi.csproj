@@ -11,8 +11,7 @@
     <None Include="..\Predefined\Actions\Talk.actionprompt.txt" Link="Predefined\Actions\Talk.actionprompt.txt" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\Predefined\ChatgptCall.txt" Link="Predefined\ChatgptCall.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="ElectronNET.API" Version="23.6.1" />
+  <ItemGroup>    
     <PackageReference Include="Radzen.Blazor" Version="4.9.2" />
     <PackageReference Include="Serilog" Version="2.12.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.4.0" />    
@@ -21,10 +20,5 @@
     <ProjectReference Include="..\EndlessRealms.Core\EndlessRealms.Core.csproj" />
     <ProjectReference Include="..\EndlessRealms.Enviroment\EndlessRealms.LocalEnv.csproj" />
     <ProjectReference Include="..\EndlessRealms.Models\EndlessRealms.Models.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Update="electron.manifest.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+  </ItemGroup>  
 </Project>

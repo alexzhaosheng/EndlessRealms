@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EndlessRealms.ElectronUi
+namespace EndlessRealms.WebUi
 {
     public static class TheAssembly
     {
