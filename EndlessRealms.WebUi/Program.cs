@@ -68,7 +68,7 @@ app.MapFallbackToPage("/_Host");
 
 await app.StartAsync();
 
-//ShowHostMessage(app);
+ShowHostMessage(app);
 app.WaitForShutdown();
 
 
