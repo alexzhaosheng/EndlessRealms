@@ -111,7 +111,7 @@
         GeneralInputValue = null;        
         var dr = await dialogService.OpenAsync("Input", ds =>
     @<RadzenStack Gap="0.5rem">
-        <RadzenText>@msg</RadzenText>
+        <RadzenText Class="rz-text-wrap"><pre style="white-space: pre-wrap">@msg</pre></RadzenText>
         <RadzenTextArea Style="height:300px;margin:10px" @bind-Value="@GeneralInputValue"></RadzenTextArea>                
         <RadzenStack AlignItems="AlignItems.End">
             <RadzenButton Text="Ok"

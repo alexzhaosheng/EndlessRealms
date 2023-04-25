@@ -84,9 +84,8 @@ namespace EndlessRealms.Core.Services
                         newWorld = w;
                     });
 
-                _renderService.Render(newWorld!);
-
-                if ((await _playIoMgr.Confirm("Is this the world you'd like to start with?")).GetValueOrDefault())
+                
+                if ((await _playIoMgr.Confirm($"{newWorld.Name}\n{newWorld.Description}\n\n Is this the world you'd like to start with?")).GetValueOrDefault())
                 {
                     break;
                 }

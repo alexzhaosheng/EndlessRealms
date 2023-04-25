@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel;
 
-namespace EndlessRealms.ElectronUi.Pages
+namespace EndlessRealms.WebUi.Pages
 {
     public class LogModel : INotifyPropertyChanged
     {

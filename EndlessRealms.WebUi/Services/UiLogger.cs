@@ -1,6 +1,6 @@
 ﻿using EndlessRealms.Core.Services;
 using Serilog;
-namespace EndlessRealms.ElectronUi.Services;
+namespace EndlessRealms.WebUi.Services;
 
 public class UILogger : ILogService
 {

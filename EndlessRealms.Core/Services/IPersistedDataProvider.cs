@@ -6,6 +6,9 @@ namespace EndlessRealms.Core.Services;
 
 public interface IPersistedDataProvider
 {
+    Task<Settings?> LoadSettings();
+    Task SaveSettings(Settings settings);
+
 	IEnumerable<World> LoadWorlds();	
 	ActionPrompt LoadActionPrompt();
 

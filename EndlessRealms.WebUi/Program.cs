@@ -1,15 +1,16 @@
-using ElectronNET.API;
 using EndlessRealms.Core.Services;
-using EndlessRealms.ElectronUi.Data;
+using EndlessRealms.WebUi.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Radzen;
 using EndlessRealms.Core.Utility;
 using Serilog;
-using EndlessRealms.ElectronUi.Services;
-using EndlessRealms.ElectronUi.Pages;
+using EndlessRealms.WebUi.Services;
+using EndlessRealms.WebUi.Pages;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,22 +23,17 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 
-builder.WebHost.UseElectron(args);
-
-builder.Services.AddElectron();
-
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
 
+builder.Services.AddSingleton<EndlessRealms.Models.Settings>();
 
-
-builder.Services.Configure<ChatGptApiSetting>(config.GetSection("ChatGpt"));
 
 builder.Services.LoadServices(EndlessRealms.Core.TheAssembly.Assembly);
 builder.Services.LoadServices(EndlessRealms.LocalEnv.TheAssembly.Assembly);
-builder.Services.LoadServices(EndlessRealms.ElectronUi.TheAssembly.Assembly);
+builder.Services.LoadServices(EndlessRealms.WebUi.TheAssembly.Assembly);
 
 var logModel = new LogModel();
 var logger = new LoggerConfiguration()
@@ -50,6 +46,8 @@ builder.Services.AddSingleton<ILogService>(new UILogger(logger));
 
 
 var app = builder.Build();
+
+await SetupSettingsValue(app);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -70,11 +68,43 @@ app.MapFallbackToPage("/_Host");
 
 await app.StartAsync();
 
-if (HybridSupport.IsElectronActive)
-{
-    var wnd = await Electron.WindowManager.CreateWindowAsync();
-    wnd.Maximize();
-}
-
+//ShowHostMessage(app);
 app.WaitForShutdown();
 
+
+
+
+void ShowHostMessage(WebApplication app)
+{
+    IConfiguration configuration = app.Services.GetRequiredService<IConfiguration>();
+
+    string hostUrl = configuration["ASPNETCORE_URLS"] ?? "http://localhost:5000";
+
+    Console.Clear();
+
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.Write("Access application from the url: ");
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine(hostUrl);
+
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.WriteLine("Close this window to close the application.");
+
+    Console.ResetColor();   
+}
+
+async Task SetupSettingsValue(WebApplication app)
+{
+    var settings = app.Services.GetService<EndlessRealms.Models.Settings>()!;
+    
+    var loadedSetting = await app.Services.GetService<IPersistedDataProvider>()!.LoadSettings();
+    if(loadedSetting != null)
+    {
+        loadedSetting.CopyTo(settings);
+    }
+    if (string.IsNullOrWhiteSpace(settings.ChatGptApiKey))
+    {
+        var section = app.Configuration.GetSection("ChatGpt");
+        settings.ChatGptApiKey = section?.GetValue<string>("ApiKey")!;
+    }
+}

@@ -1,0 +1,13 @@
+﻿@page "/initial"
+@inject NavigationManager navigationManager;
+<RadzenLayout Class="rz-background-color-base-900">
+    <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Style="height:80vh;width:100vw">
+        <Setting SettingsOnly="true" OnSettingSaved="OnSettingSaved"></Setting>   
+    </RadzenStack>
+</RadzenLayout>
+@{
+    void OnSettingSaved()
+    {
+        navigationManager.NavigateTo("/");
+    }
+}
