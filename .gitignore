@@ -4,8 +4,6 @@
 /.vs/ProjectEvaluation
 /EndlessRealms.GUI/appSettings.dev.json
 /output
-/EndlessRealms.ElectronUi/Status/Worlds
-/EndlessRealms.ElectronUi/Status
-/EndlessRealms.ElectronUi/appSettings.dev.json
+
 /EndlessRealms.WebUi/release.out
 /EndlessRealms.WebUi/Status
