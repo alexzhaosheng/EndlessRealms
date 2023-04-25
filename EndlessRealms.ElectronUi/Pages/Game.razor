@@ -1,0 +1,172 @@
+﻿@using EndlessRealms.Core.Services;
+@using Radzen;
+@using Radzen.Blazor.Rendering;
+@inject GameModel gameModel;
+@inject EndlessRealms.Core.Game game;
+@inject PlayerIoManager.Handler ioHandler;
+@inject DialogService dialogService;
+@inject SystemStatusManager statusManager;
+<RadzenLayout Style="height:calc(100vh - 100px)">
+    <RadzenBody>
+        <RadzenStack>   
+            @if (gameModel.Scene != null)
+            {
+                <RadzenCard Class="rz-background-color-success-lighter rz-color-white rz-mx-12" Gap="0.5rem">
+                    <RadzenText TextStyle="TextStyle.H6" Class="rz-color-series-4">@gameModel.World!.Name | @gameModel.Scene!.Name  </RadzenText>
+                    <RadzenText TextStyle="TextStyle.Subtitle1" Text="@gameModel.Scene.Description"></RadzenText>
+                </RadzenCard>
+               
+                <RadzenCard Gap="1rem" Class="rz-mx-12">
+                    <RadzenStack Orientation="Orientation.Horizontal" Wrap="FlexWrap.Wrap">
+                        @foreach(var d in gameModel.Scene.ConnectedScenes)
+                        {
+                        <DirectionUi Direction="@d.Key" ConnectedSceneId="@d.Value"></DirectionUi>
+                        }
+                    </RadzenStack>
+                </RadzenCard>
+                <RadzenCard Gap="1rem" Class="rz-mx-12">
+                    <RadzenStack Orientation="Orientation.Horizontal" Wrap="FlexWrap.Wrap" JustifyContent="JustifyContent.Start">
+                        @foreach(var d in gameModel.Scene.Characters)
+                        {
+                            <CharactorUi Charactor=@d></CharactorUi>
+                        }
+                        @foreach(var d in gameModel.Scene.Things)
+                        {
+                            <ThingUi Something="@d"></ThingUi>
+                        }
+                    </RadzenStack>
+                </RadzenCard>
+            }          
+        </RadzenStack>        
+    </RadzenBody>
+    <RadzenFooter Style="height:300px;overflow-x:hidden;overflow-y:auto">
+        <RadzenStack>
+            @{
+                var firstLine = true;
+                foreach(var msg in gameModel.Messages.Reverse())
+                {
+                    var className = firstLine
+                        ? (msg.Item1 == Core.Services.OutputType.WorldMessage ? "rz-color-success-light" : "rz-color-secondary-light")
+                        : (msg.Item1 == Core.Services.OutputType.WorldMessage ? "rz-color-success-dark" : "rz-color-secondary-dark");
+                    <RadzenText Class="@className">@msg.Item2</RadzenText>
+                }
+            }
+        </RadzenStack>
+    </RadzenFooter>
+</RadzenLayout>
+
+@code {
+    public EventCallback<InputType> OnInputReceived { get; set; }
+
+    private string? GeneralInputValue { get; set; }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            gameModel.PropertyChanged += (s, e) => this.InvokeAsync(()=> this.StateHasChanged());
+            StartTheGame();
+        }
+    }
+
+    private void StartTheGame()
+    {
+        ioHandler.InputLisenterChanged += async (s, e) =>
+        {
+            if (e == InputType.GeneralInput)
+            {
+                await InvokeAsync(async () =>
+            {
+                await GeneralInput();
+                StateHasChanged();
+            });
+
+            }
+        };
+
+        statusManager.StatusChanged += (s, e) =>
+        {
+            this.InvokeAsync(async () =>
+            {
+                if(statusManager.CurrentStatus == SystemStatus.Working)
+                {
+                    await ShowLoadingInfo(statusManager.CurrentStatusMessage);
+                }
+                else
+                {
+                    CloseCurrentLoadingMessage();
+                }
+            });
+        };
+
+        if (!game.GameIsRuning)
+        {
+            Task.Run(async () => await game.Start());
+        }
+    }
+
+    async Task GeneralInput()
+    {                
+        var msg = ioHandler.GetInputMessage(InputType.GeneralInput);
+        GeneralInputValue = null;        
+        var dr = await dialogService.OpenAsync("Input", ds =>
+    @<RadzenStack Gap="0.5rem">
+        <RadzenText>@msg</RadzenText>
+        <RadzenTextArea Style="height:300px;margin:10px" @bind-Value="@GeneralInputValue"></RadzenTextArea>                
+        <RadzenStack AlignItems="AlignItems.End">
+            <RadzenButton Text="Ok"
+                      ButtonStyle="ButtonStyle.Primary"
+                      Click="(()=>this.OnGeneralInput(ds))">
+            </RadzenButton>
+        </RadzenStack>
+        </RadzenStack>
+    ,
+            new DialogOptions() { Width = "740px" }
+    );
+    }
+
+    private void OnGeneralInput(DialogService ds)
+    {
+        var vr = ioHandler.GetInputValidator(InputType.GeneralInput)?.Invoke(GeneralInputValue!);
+        if(vr != null)
+        {
+            var (isValid, validateMessage) = vr.Value;
+            if (!isValid)
+            {
+                dialogService.Alert(validateMessage, "Error", new AlertOptions() { OkButtonText = "Ok" });
+                return;
+            }           
+        }
+        ds.Close();
+
+        ioHandler.NotifyInput(InputType.GeneralInput, GeneralInputValue!);        
+    }
+
+  
+    private bool _isLoadingMessageVisible;
+    private string? _currentLoadingMessage;
+    private async Task ShowLoadingInfo(string message)
+    {
+        _currentLoadingMessage = message;
+        if (_isLoadingMessageVisible)
+        {
+            return;
+        }
+        _isLoadingMessageVisible = true;
+        await dialogService.OpenAsync("", (ds) =>
+    @<RadzenStack>
+        <RadzenText>@_currentLoadingMessage</RadzenText>
+        </RadzenStack>
+    ,
+    new DialogOptions() { ShowTitle = false, Style = "min-height:auto;min-width:auto;width:auto", CloseDialogOnEsc = false });
+    }
+
+    private void CloseCurrentLoadingMessage()
+    {
+        if (_isLoadingMessageVisible)
+        {
+            _isLoadingMessageVisible = false;
+            dialogService.Close();
+        }
+    }
+}

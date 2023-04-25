@@ -12,7 +12,7 @@ public class FilePersistedDataProvider: IPersistedDataProvider
 {
 	private string GetStatusFolder(string? path = null)
 	{
-		var folder = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!, "Status");
+		var folder = "Status";
         if(path != null)
         {
             folder = Path.Combine(folder, path);
@@ -26,8 +26,8 @@ public class FilePersistedDataProvider: IPersistedDataProvider
 	private string GetPredefinedFolder(string? path = null)
 	{
 		var folder = path == null
-			? Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!, "Predefined")
-			: Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!, "Predefined", path);
+			? Path.Combine(AppContext.BaseDirectory, "Predefined")
+			: Path.Combine(AppContext.BaseDirectory, "Predefined", path);
 
 		if (!Directory.Exists(folder))
 		{

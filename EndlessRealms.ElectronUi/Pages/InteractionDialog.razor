@@ -1,0 +1,82 @@
+﻿@using Radzen;
+@using Radzen.Blazor.Rendering;
+@using EndlessRealms.Core.Services;
+@using EndlessRealms.Models;
+@using EndlessRealms.Core;
+
+@using Microsoft.JSInterop
+@inject IPersistedDataProvider persistedDataProvider;
+@inject IJSRuntime JS
+@inject ActionSession actionSession;
+
+<RadzenStack Style="height:70vh;" Class="rz-color-white">
+    <RadzenStack Style="height:calc(100% - 50px);">
+        <RadzenRow Style="height:100%">
+            <RadzenColumn Size="10">
+                <div @ref=ContentPanelRef style="height:100%" class="rz-border-primary-lighter rz-py-2 rz-px-2">
+                    <RadzenStack Gap="0.5rem">
+                        @foreach (var item in actionSession.ActionHistory!.History)
+                        {
+                            <div style="text-align:left">
+                                <RadzenText Class="rz-border-radius-1 rz-background-color-info-dark rz-text-wrap rz-py-1 rz-px-2" Style="display:inline-block; margin-right:100px">@item.Action</RadzenText>
+                            </div>
+                            <div style="text-align:right">
+                                <RadzenText Class="rz-border-radius-1 rz-background-color-success-dark rz-text-wrap rz-py-1 rz-px-2" Style="display:inline-block;margin-left:100px">@item.Response</RadzenText>
+                            </div>
+                        }
+
+                        @if(CurrentInput != null)
+                        {
+                            <div style="text-align:left">
+                                <RadzenText Class="rz-border-radius-1 rz-background-color-info-dark rz-text-wrap rz-py-1 rz-px-2" Style="display:inline-block;margin-right:100px">@CurrentInput</RadzenText>
+                            </div>
+                        }
+        </RadzenStack>
+                </div>
+    </RadzenColumn>
+    <RadzenColumn Size="2">
+                <RadzenStack Gap="0.2rem">
+                    <RadzenText TextStyle="TextStyle.H6"><b>@ActionTarget?.Name</b></RadzenText>
+                    <RadzenText Style="rz-text-wrap">@ActionTarget?.Description</RadzenText>
+
+                    <RadzenText Class="rz-mt-5 rz-color-warning-light">Start with "!" to perform an aciton. eg:"!hug" to hug </RadzenText>
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenStack>
+
+    <RadzenStack>
+        <RadzenTextBox @bind-Value=CurrentInput  @onkeyup=OnKeyUp></RadzenTextBox>
+    </RadzenStack>
+</RadzenStack>
+
+@code {
+    [Parameter]
+    public IActionTarget? ActionTarget{ get; set; }
+
+    private ElementReference ContentPanelRef;
+
+    private string? CurrentInput { get; set; } = null;
+
+    override protected async Task OnInitializedAsync()
+    {
+        await actionSession.Initialize(ActionTarget!);        
+    }
+
+    override protected void OnAfterRender(bool firstRender)
+    {
+        JS.InvokeVoidAsync("scrollToEnd", new object[] { ContentPanelRef });
+    }
+
+    private async void OnKeyUp(KeyboardEventArgs e)
+    {
+        if(e.Key == "Enter" && !string.IsNullOrWhiteSpace(CurrentInput))
+        {
+            await actionSession.Perform(CurrentInput);
+
+            CurrentInput = null;
+
+            StateHasChanged();
+        }
+    }
+}

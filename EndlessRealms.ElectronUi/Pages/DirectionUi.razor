@@ -1,0 +1,33 @@
+@using EndlessRealms.Core.Services;
+@using EndlessRealms.Models;
+@inject WorldService worldService;
+@inject PlayerIoManager.Handler ioHandler;
+<RadzenStack Gap="0.5rem" Style="padding:5px 15px">
+    <RadzenButton ButtonStyle="ButtonStyle.Warning" Click="@OnClicked">
+        <RadzenStack Gap="0.5rem" Orientation="Orientation.Horizontal">
+            <RadzenIcon Icon="motorcycle"></RadzenIcon>
+            <RadzenText>@Direction</RadzenText>
+        </RadzenStack>
+    </RadzenButton>
+    @if (!string.IsNullOrEmpty(ConnectedSceneId))
+    {
+        var scene = worldService.CurrentWorld!.Scenes.FirstOrDefault(t => t.Id == ConnectedSceneId);
+        if(scene != null)
+        {
+            <RadzenText>(@scene.Name)</RadzenText>
+        }
+    }
+</RadzenStack>
+
+@code {
+    [Parameter]
+    public Direction? Direction{ get; set; }
+
+    [Parameter]
+    public string? ConnectedSceneId{ get; set; }
+
+    private async void OnClicked()
+    {
+        ioHandler.NotifyInput(InputType.DirectionInput, Direction.ToString());
+    }
+}
