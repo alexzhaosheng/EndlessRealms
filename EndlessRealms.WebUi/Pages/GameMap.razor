@@ -1,0 +1,53 @@
+﻿@using EndlessRealms.Models;
+@using EndlessRealms.WebUi.Services;
+@using EndlessRealms.Core.Utility.Extensions;
+@using EndlessRealms.Core.Services;
+@inject MapService mapService;
+@inject WorldService worldService;
+
+<div class="game-map rz-border-info-darker rz-border-radius-4" style="height:@(MapSize)px;width:@(MapSize)px">
+    <div id="plantuml-diagram rz-border-radius-2">
+        @{
+            var marginV = Math.Max(0, (MapSize - AreaHeight) / 2);
+            var marginH = Math.Max(0, (MapSize - AreaWidth) / 2);
+        }
+        <svg height="@(AreaHeight + RectSpacing * 2)" width="@(AreaWidth + RectSpacing)" style="margin:@(marginH)px @(marginV)px">
+            @foreach (var scene in mapService.Scenes)
+            {
+                var x = scene.Position.X * (RectWidth + RectSpacing);
+                var y = AreaHeight - (scene.Position.Y * (RectHeight + RectSpacing));
+                var pos = new ScenePosition(x, y);
+                var centerPos = new ScenePosition(x + RectWidth/2, y + RectHeight/2);
+                <g class="scene @(scene.Scene == worldService.Current? "selected": "")">
+                    <rect x="@x" y="@y" width="@RectWidth" height="@RectHeight"/>
+                    <text x="@centerPos.X" y="@centerPos.Y" dominant-baseline="central">@scene.Scene.Name</text>
+                    @foreach (var direction in scene.Directions)
+                    {
+
+                        var lStart = direction.ToPosition().Extend(RectWidth / 2, RectHeight / 2) + centerPos;
+                        var lEnd = direction.ToPosition() * RectSpacing + lStart;
+                        <line x1="@lStart.X" y1="@lStart.Y" x2="@lEnd.X" y2="@lEnd.Y"/>
+                    }
+                </g>
+            }
+        </svg>
+    </div>
+</div>
+@code {
+    const int MapSize = 400;
+    const int RectWidth = 60;
+    const int RectHeight = 25;
+    const int RectSpacing = 20;
+
+    int AreaHeight { get => mapService.Height * (RectHeight + RectSpacing); }
+    int AreaWidth { get => mapService.Width * (RectWidth + RectSpacing); }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            mapService.PropertyChanged += (s, e) => this.InvokeAsync(() => this.StateHasChanged());
+            worldService.SceneChanged += (s, e) => this.InvokeAsync(() => this.StateHasChanged());
+        }
+    }
+}

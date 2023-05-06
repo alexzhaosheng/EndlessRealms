@@ -1,4 +1,5 @@
 ﻿@using EndlessRealms.Core.Services;
+@using EndlessRealms.WebUi.Services;
 @using Radzen;
 @using Radzen.Blazor.Rendering;
 @inject GameModel gameModel;
@@ -55,17 +56,22 @@
     </RadzenFooter>
 </RadzenLayout>
 
+<GameMap></GameMap>
+
 @code {
     public EventCallback<InputType> OnInputReceived { get; set; }
 
     private string? GeneralInputValue { get; set; }
+
+    private bool IsMapExpanded{ get; set; }
+    
 
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
             gameModel.PropertyChanged += (s, e) => this.InvokeAsync(()=> this.StateHasChanged());
-            StartTheGame();
+            StartTheGame();            
         }
     }
 

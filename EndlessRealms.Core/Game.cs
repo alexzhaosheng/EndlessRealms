@@ -43,6 +43,7 @@ namespace EndlessRealms.Core
         }
 
         public event EventHandler? QuitGame;
+        public event EventHandler? GameStarted;
         private bool _gameIsRuning;
 
         public bool GameIsRuning { get => _gameIsRuning;}
@@ -57,7 +58,9 @@ namespace EndlessRealms.Core
 
                 await _gameContext.Initialize();
                 await _worldService.Initialize();
-                
+
+                GameStarted?.Invoke(this, EventArgs.Empty);
+
                 await GameCircle();
 
             }

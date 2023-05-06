@@ -93,7 +93,7 @@ Your Response:
 ---
 @Description: In front of you, the street bustles with life and activity. High-tech skyscrapers soar high above, with flying cars darting between them. Holograms and neon signs light up the night, creating a colorful and vibrant atmosphere. The sounds of people and activity fill the air.                         
 Characters:
-  - @FullName: Johnny Silverhand   
+  - @FullName: <>  
     @Race: Human
     @Title: Soul of Samurai
     @Sex: Male
@@ -126,7 +126,7 @@ Characters:
     [OMITTED]
 My example only give out 2 things. In your response, the number of things to imagine depends on the region. For example, in barren areas like deserts, only 0-2 things should be imagined. In a city, 6-8 things can be imagined.
 My example only give out 1 charactor. In your reponse,  for crowded places, create up to 4 characters. For open areas, usually no characters are created, but occasionally 1 to 2 characters can be created.
-You must insert line break after each piece of data.
+Before return,validate result to make sure the result is valid YAML
 Now let's start:
 Player language: {PLAYER_LANGUAGE}
 My Description:

@@ -174,6 +174,8 @@ namespace EndlessRealms.Core.Services
                 }
             }
             await _persistedDataAccessor.SaveWorld(world);
+
+            SceneAdded?.Invoke(this, EventArgs.Empty);
             return scene;
         }
 
@@ -233,6 +235,8 @@ namespace EndlessRealms.Core.Services
             _gameContext.CurrentPlayerInfo.CurrentWorldId = CurrentWorld.Id;
             await _gameContext.SavePlayerInfo();
 
+            SceneChanged?.Invoke(this, EventArgs.Empty);
+
             SaveChangedWorlds();
         }
 
@@ -279,9 +283,16 @@ namespace EndlessRealms.Core.Services
             }
         }
 
+        public event EventHandler<EventArgs> SceneAdded;
+        public event EventHandler<EventArgs> WorldChanged;
+        public event EventHandler<EventArgs> SceneChanged;
+
         public void NotifyCurrentWorldChanged()
         {
             NotifyWorldChanged(CurrentWorld!);
+
+            WorldChanged?.Invoke(this, EventArgs.Empty);
         }
+
     }
 }
