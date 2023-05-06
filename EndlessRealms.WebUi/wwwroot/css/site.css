@@ -77,3 +77,47 @@ a, .btn-link {
     .full-height-tab .rz-tabview-panel {
         height: 100%;
     }
+
+
+.game-map {
+    position: fixed;
+    right: 15px;
+    bottom: 15px;
+    height: 400px;
+    width: 400px;
+    background-color: #00FF0022;
+}
+
+    .game-map > div {
+        height: calc(100% - 20px);
+        width: calc(100% - 20px);
+        margin: 10px;
+        overflow: auto;        
+    }
+    .game-map .map-icon{
+        position:absolute;
+        left:-15px;
+        top:-15px;
+        font-size:2em;
+    }
+
+    .game-map .scene rect{
+        fill:none;
+        stroke: lightgreen;
+    }
+    .game-map .scene text {
+        fill: white;
+        font-size: 8px;
+        text-anchor: middle;
+        
+    }    
+    .game-map .selected rect{
+        fill: lightgreen;        
+    }
+    .game-map .selected text {
+        fill: black;
+    }
+    .game-map line{
+        stroke:lightgreen;
+        stroke-width: 1px;
+    }

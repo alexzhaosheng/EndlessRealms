@@ -33,6 +33,24 @@ public static class DirectionExtension
         }
     }
 
+    public static ScenePosition ToPosition(this Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.North:
+                return new ScenePosition(0, 1);
+            case Direction.South:
+                return new ScenePosition(0, -1);
+            case Direction.East:
+                return new ScenePosition(1, 0);
+            case Direction.West:
+                return new ScenePosition(-1, 0);
+
+            default:
+                throw new ArgumentException();
+        }
+    }
+    
     public static Direction? ToDirection(this string directionStr)
     {
         var d = directionStr.ToLower();
